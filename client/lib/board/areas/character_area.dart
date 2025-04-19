@@ -6,6 +6,9 @@ class CharacterArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
+
     return Container(
       width: kCardHeight * 5,
       height: kCardHeight,

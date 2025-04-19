@@ -6,6 +6,10 @@ class LeaderArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
+    final double kCardWidth = kCardHeight * kCardAspectRatio;
+
     return Container(
       width: kCardWidth,
       height: kCardHeight,

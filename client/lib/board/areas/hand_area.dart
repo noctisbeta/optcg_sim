@@ -1,8 +1,8 @@
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 
-class StageArea extends StatelessWidget {
-  const StageArea({super.key});
+class HandArea extends StatelessWidget {
+  const HandArea({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,12 @@ class StageArea extends StatelessWidget {
     final double kCardWidth = kCardHeight * kCardAspectRatio;
 
     return Container(
-      width: kCardWidth,
+      width:
+          kCardWidth * 2 +
+          kPadding * 2 +
+          kCardHeight * 5 -
+          kCardWidth -
+          kPadding,
       height: kCardHeight,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 1.0),
@@ -19,7 +24,7 @@ class StageArea extends StatelessWidget {
       ),
       child: FittedBox(
         child: Text(
-          'Stage',
+          'Hand',
           style: TextStyle(color: Colors.grey[400]!),
           textAlign: TextAlign.center,
         ),

@@ -2,10 +2,12 @@ import 'package:client/board/areas/character_area.dart';
 import 'package:client/board/areas/cost_area.dart';
 import 'package:client/board/areas/deck_area.dart';
 import 'package:client/board/areas/don_area.dart';
+import 'package:client/board/areas/hand_area.dart';
 import 'package:client/board/areas/leader_area.dart';
 import 'package:client/board/areas/life_area.dart';
 import 'package:client/board/areas/stage_area.dart';
 import 'package:client/board/areas/trash_area.dart';
+import 'package:client/constants.dart';
 import 'package:client/util/list_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -22,16 +24,17 @@ class Board extends StatelessWidget {
         mainAxisAlignment:
             isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
+          SizedBox(height: kPadding),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Column(
                 children: [
                   LifeArea(),
-                  const SizedBox(height: 12),
+                  SizedBox(height: kPadding),
                 ].reverseWhen(isOpponent),
               ),
-              const SizedBox(width: 24),
+              SizedBox(width: kPadding),
               Column(
                 crossAxisAlignment:
                     isOpponent
@@ -39,14 +42,14 @@ class Board extends StatelessWidget {
                         : CrossAxisAlignment.end,
                 children: [
                   CharacterArea(),
-                  const SizedBox(height: 12),
+                  SizedBox(height: kPadding),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       LeaderArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       StageArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       DeckArea(),
                     ].reverseWhen(isOpponent),
                   ),
@@ -54,26 +57,28 @@ class Board extends StatelessWidget {
               ),
             ].reverseWhen(isOpponent),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: kPadding),
           Row(
             mainAxisSize: MainAxisSize.min,
             children:
                 isOpponent
                     ? [
                       TrashArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       CostArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       DonArea(),
                     ]
                     : [
                       DonArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       CostArea(),
-                      const SizedBox(width: 12),
+                      SizedBox(width: kPadding),
                       TrashArea(),
                     ],
           ),
+          SizedBox(height: kPadding),
+          HandArea(),
         ].reverseWhen(isOpponent),
       ),
     );

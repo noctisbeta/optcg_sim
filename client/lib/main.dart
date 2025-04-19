@@ -2,7 +2,16 @@ import 'package:client/extended_board.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderWrapper());
+}
+
+class ProviderWrapper extends StatelessWidget {
+  const ProviderWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MyApp();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +19,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(body: ExtendedBoard()));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(body: const ExtendedBoard()),
+    );
   }
 }

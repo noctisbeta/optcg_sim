@@ -6,12 +6,13 @@ class ExtendedBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Expanded(child: Board(isOpponent: true)),
-        Divider(),
-        Expanded(child: Board(isOpponent: false)),
-      ],
+    return Center(
+      child: const Column(
+        children: [
+          Expanded(child: Board(isOpponent: true)),
+          Expanded(child: Board(isOpponent: false)),
+        ],
+      ),
     );
   }
 }

@@ -6,8 +6,12 @@ class CostArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
+    final double kCardWidth = kCardHeight * kCardAspectRatio;
+
     return Container(
-      width: kCardHeight * 5 - kCardWidth,
+      width: kCardHeight * 5 - kCardWidth - kPadding,
       height: kCardHeight,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 1.0),
