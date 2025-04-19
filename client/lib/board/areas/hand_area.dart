@@ -6,7 +6,7 @@ class HandArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final double screenHeight = MediaQuery.of(context).size.height;
     final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
     final double kCardWidth = kCardHeight * kCardAspectRatio;
 
@@ -18,14 +18,11 @@ class HandArea extends StatelessWidget {
           kCardWidth -
           kPadding,
       height: kCardHeight,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        color: Colors.grey[300],
-      ),
+      decoration: BoxDecoration(border: Border.all(), color: Colors.grey[300]),
       child: FittedBox(
         child: Text(
           'Hand',
-          style: TextStyle(color: Colors.grey[400]!),
+          style: TextStyle(color: Colors.grey[400]),
           textAlign: TextAlign.center,
         ),
       ),

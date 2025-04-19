@@ -9,19 +9,15 @@ class ProviderWrapper extends StatelessWidget {
   const ProviderWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MyApp();
-  }
+  Widget build(BuildContext context) => const MyApp();
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: const ExtendedBoard()),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(body: ExtendedBoard()),
+  );
 }

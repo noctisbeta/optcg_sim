@@ -17,70 +17,68 @@ class Board extends StatelessWidget {
   final bool isOpponent;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: isOpponent ? Colors.pink[100] : Colors.lightGreen[100],
-      child: Column(
-        mainAxisAlignment:
-            isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          SizedBox(height: kPadding),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Column(
-                children: [
-                  LifeArea(),
-                  SizedBox(height: kPadding),
-                ].reverseWhen(isOpponent),
-              ),
-              SizedBox(width: kPadding),
-              Column(
-                crossAxisAlignment:
-                    isOpponent
-                        ? CrossAxisAlignment.start
-                        : CrossAxisAlignment.end,
-                children: [
-                  CharacterArea(),
-                  SizedBox(height: kPadding),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      LeaderArea(),
-                      SizedBox(width: kPadding),
-                      StageArea(),
-                      SizedBox(width: kPadding),
-                      DeckArea(),
-                    ].reverseWhen(isOpponent),
-                  ),
-                ].reverseWhen(isOpponent),
-              ),
-            ].reverseWhen(isOpponent),
-          ),
-          SizedBox(height: kPadding),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children:
-                isOpponent
-                    ? [
-                      TrashArea(),
-                      SizedBox(width: kPadding),
-                      CostArea(),
-                      SizedBox(width: kPadding),
-                      DonArea(),
-                    ]
-                    : [
-                      DonArea(),
-                      SizedBox(width: kPadding),
-                      CostArea(),
-                      SizedBox(width: kPadding),
-                      TrashArea(),
-                    ],
-          ),
-          SizedBox(height: kPadding),
-          HandArea(),
-        ].reverseWhen(isOpponent),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+    color: isOpponent ? Colors.pink[100] : Colors.lightGreen[100],
+    child: Column(
+      mainAxisAlignment:
+          isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        const SizedBox(height: kPadding),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(
+              children: [
+                const LifeArea(),
+                const SizedBox(height: kPadding),
+              ].reverseWhen(isOpponent),
+            ),
+            const SizedBox(width: kPadding),
+            Column(
+              crossAxisAlignment:
+                  isOpponent
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.end,
+              children: [
+                const CharacterArea(),
+                const SizedBox(height: kPadding),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LeaderArea(),
+                    const SizedBox(width: kPadding),
+                    const StageArea(),
+                    const SizedBox(width: kPadding),
+                    const DeckArea(),
+                  ].reverseWhen(isOpponent),
+                ),
+              ].reverseWhen(isOpponent),
+            ),
+          ].reverseWhen(isOpponent),
+        ),
+        const SizedBox(height: kPadding),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children:
+              isOpponent
+                  ? [
+                    const TrashArea(),
+                    const SizedBox(width: kPadding),
+                    const CostArea(),
+                    const SizedBox(width: kPadding),
+                    const DonArea(),
+                  ]
+                  : [
+                    const DonArea(),
+                    const SizedBox(width: kPadding),
+                    const CostArea(),
+                    const SizedBox(width: kPadding),
+                    const TrashArea(),
+                  ],
+        ),
+        const SizedBox(height: kPadding),
+        const HandArea(),
+      ].reverseWhen(isOpponent),
+    ),
+  );
 }

@@ -6,20 +6,17 @@ class CharacterArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final double screenHeight = MediaQuery.of(context).size.height;
     final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
 
     return Container(
       width: kCardHeight * 5,
       height: kCardHeight,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        color: Colors.grey[300],
-      ),
+      decoration: BoxDecoration(border: Border.all(), color: Colors.grey[300]),
       child: FittedBox(
         child: Text(
           'Characters',
-          style: TextStyle(color: Colors.grey[400]!),
+          style: TextStyle(color: Colors.grey[400]),
           textAlign: TextAlign.center,
         ),
       ),
