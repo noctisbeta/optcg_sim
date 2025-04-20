@@ -5,6 +5,7 @@ import 'package:client/board/areas/don_area.dart';
 import 'package:client/board/areas/hand_area.dart';
 import 'package:client/board/areas/leader_area.dart';
 import 'package:client/board/areas/life_area.dart';
+import 'package:client/board/areas/name_area.dart';
 import 'package:client/board/areas/stage_area.dart';
 import 'package:client/board/areas/trash_area.dart';
 import 'package:client/constants.dart';
@@ -45,6 +46,8 @@ class Board extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    NameArea(isOpponent: isOpponent),
+                    const SizedBox(width: kPadding),
                     const LeaderArea(),
                     const SizedBox(width: kPadding),
                     const StageArea(),
