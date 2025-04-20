@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:client/constants.dart';
-import 'package:client/game_state/cards/card.dart';
-import 'package:client/game_state/cards/properties/card_color.dart';
-import 'package:client/game_state/player.dart';
+import 'package:common/game_state/cards/card.dart';
+import 'package:common/game_state/cards/properties/card_color.dart';
+import 'package:common/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,5 +1,6 @@
-import 'package:client/game_state/player.dart';
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+
+import 'player.dart';
 
 @immutable
 final class GameState {

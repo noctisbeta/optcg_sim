@@ -1,5 +1,5 @@
 import 'package:client/constants.dart';
-import 'package:client/game_state/player.dart';
+import 'package:common/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,6 +1,6 @@
 import 'package:client/board/board.dart';
-import 'package:client/game_state/game_controller.dart';
-import 'package:client/game_state/game_state.dart';
+import 'package:client/game_controller.dart';
+import 'package:common/game_state/game_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

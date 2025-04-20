@@ -1,6 +1,6 @@
-import 'package:client/game_state/cards/card.dart';
-import 'package:client/game_state/cards/properties/card_attribute.dart';
-import 'package:client/game_state/cards/properties/card_color.dart';
+import 'cards/card.dart';
+import 'cards/properties/card_attribute.dart';
+import 'cards/properties/card_color.dart';
 
 final class Player {
   const Player({

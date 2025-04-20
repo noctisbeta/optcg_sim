@@ -1,5 +1,5 @@
 import 'package:client/extended_board.dart';
-import 'package:client/game_state/game_controller.dart';
+import 'package:client/game_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
