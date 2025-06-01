@@ -27,11 +27,9 @@ class CardOptionsView extends StatelessWidget {
                       context.read<CardOptionsController>().clearSelection();
                     }
 
-                    await context
-                        .read<SingleplayerGameController>()
-                        .attackWithCharacter(
-                          card as CharacterCard,
-                        );
+                    await context.read<SingleplayerGameController>().attack(
+                      card as CharacterCard,
+                    );
 
                     afterAttack();
                   },
@@ -63,9 +61,9 @@ class CardOptionsView extends StatelessWidget {
                       context.read<CardOptionsController>().clearSelection();
                     }
 
-                    await context
-                        .read<SingleplayerGameController>()
-                        .attackWithLeader();
+                    await context.read<SingleplayerGameController>().attack(
+                      card,
+                    );
 
                     afterAttack();
                   },
