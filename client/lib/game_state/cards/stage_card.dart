@@ -2,6 +2,7 @@ part of 'card.dart';
 
 final class StageCard extends DeckCard {
   StageCard({
+    required super.id,
     required super.name,
     required super.type,
     required super.cost,
@@ -21,6 +22,7 @@ final class StageCard extends DeckCard {
     String? cardNumber,
     int? blockNumber,
     bool? isActive,
+    int? id,
   }) => StageCard(
     name: name ?? this.name,
     type: type ?? this.type,
@@ -29,5 +31,6 @@ final class StageCard extends DeckCard {
     cardNumber: cardNumber ?? this.cardNumber,
     blockNumber: blockNumber ?? this.blockNumber,
     isActive: isActive ?? this.isActive,
+    id: id ?? this.id,
   );
 }

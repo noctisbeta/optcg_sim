@@ -1,7 +1,9 @@
 part of 'card.dart';
 
-final class CharacterCard extends DeckCard {
+@immutable
+class CharacterCard extends DeckCard {
   const CharacterCard({
+    required super.id,
     required super.name,
     required super.type,
     required super.cost,
@@ -12,7 +14,7 @@ final class CharacterCard extends DeckCard {
     required this.attributes,
     required this.isFrozen,
     required this.isActive,
-    this.counter,
+    required this.counter,
   });
 
   final int power;
@@ -33,7 +35,9 @@ final class CharacterCard extends DeckCard {
     bool? isFrozen,
     bool? isActive,
     int? counter,
+    int? id,
   }) => CharacterCard(
+    id: id ?? this.id,
     name: name ?? this.name,
     type: type ?? this.type,
     cost: cost ?? this.cost,

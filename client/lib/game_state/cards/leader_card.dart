@@ -2,6 +2,7 @@ part of 'card.dart';
 
 final class LeaderCard extends Card {
   const LeaderCard({
+    required super.id,
     required this.power,
     required this.attribute,
     required this.colors,
@@ -33,7 +34,9 @@ final class LeaderCard extends Card {
     int? blockNumber,
     bool? isActive,
     bool? isFrozen,
+    int? id,
   }) => LeaderCard(
+    id: id ?? this.id,
     power: power ?? this.power,
     attribute: attribute ?? this.attribute,
     colors: colors ?? this.colors,

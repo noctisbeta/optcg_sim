@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:client/constants.dart';
-import 'package:common/game_state/cards/card.dart';
-import 'package:common/game_state/cards/properties/card_color.dart';
-import 'package:common/game_state/player.dart';
+import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/properties/card_color.dart';
+import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,19 +41,18 @@ class LeaderArea extends StatelessWidget {
                 height: kCardHeight,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors:
-                        leaderCard.colors
-                            .map(
-                              (color) => switch (color) {
-                                CardColor.red => Colors.red,
-                                CardColor.blue => Colors.blue,
-                                CardColor.green => Colors.green,
-                                CardColor.yellow => Colors.yellow,
-                                CardColor.purple => Colors.purple,
-                                CardColor.black => Colors.black,
-                              },
-                            )
-                            .toList(),
+                    colors: leaderCard.colors
+                        .map(
+                          (color) => switch (color) {
+                            CardColor.red => Colors.red,
+                            CardColor.blue => Colors.blue,
+                            CardColor.green => Colors.green,
+                            CardColor.yellow => Colors.yellow,
+                            CardColor.purple => Colors.purple,
+                            CardColor.black => Colors.black,
+                          },
+                        )
+                        .toList(),
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),

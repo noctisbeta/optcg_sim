@@ -2,6 +2,7 @@ part of 'card.dart';
 
 sealed class DeckCard extends Card {
   const DeckCard({
+    required super.id,
     required this.name,
     required this.type,
     required this.cost,

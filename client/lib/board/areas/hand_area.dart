@@ -1,6 +1,7 @@
+import 'package:client/card_views/hand_card_view.dart';
 import 'package:client/constants.dart';
-import 'package:common/game_state/cards/card.dart'; // Assuming you have a base Card class or specific hand card type
-import 'package:common/game_state/player.dart';
+import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,42 +56,17 @@ class HandArea extends StatelessWidget {
           // Generate the stack of hand cards
           ...handCards.asMap().entries.map((entry) {
             final int index = entry.key;
-            // Card card = entry.value; // The card object, can be used to display card details or image later
 
             final double leftPosition =
                 initialLeftOffset + (index * cardOverlapOffset);
 
             return Positioned(
               left: leftPosition,
-              top: 0, // Align cards to the top of the HandArea
-              child: Container(
+              top: 0,
+              child: SizedBox(
                 width: kCardWidth,
                 height: kCardHeight,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black87, width: 1.5),
-                  color: Colors
-                      .deepPurple[300], // Placeholder color for hand cards
-                  // Optional: rounded corners
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.25),
-                      blurRadius: 4,
-                      offset: const Offset(2, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Card', // Placeholder text
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      fontSize:
-                          kCardHeight *
-                          0.15, // Adjust font size based on card height
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                child: HandCardView(card: entry.value as CharacterCard),
               ),
             );
           }),

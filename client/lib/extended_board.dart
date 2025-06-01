@@ -1,6 +1,12 @@
 import 'package:client/board/board.dart';
+import 'package:client/card_views/card_highlight_controller.dart';
+import 'package:client/card_views/card_options_controller.dart';
+import 'package:client/card_views/card_options_view.dart';
+import 'package:client/card_views/highlighted_card_view.dart';
+import 'package:client/constants.dart';
 import 'package:client/game_controller.dart';
-import 'package:common/game_state/game_state.dart';
+import 'package:client/game_state/cards/card.dart' hide Card;
+import 'package:client/game_state/game_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,6 +57,39 @@ class ExtendedBoard extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+              const SizedBox(width: 20),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BlocBuilder<CardHighlightController, DeckCard?>(
+                    builder: (context, highlightedCard) {
+                      if (highlightedCard == null) {
+                        return const SizedBox(
+                          width: kCardWidth * 4,
+                          height: kCardHeight * 4,
+                          child: Center(child: Text('No card selected')),
+                        );
+                      }
+
+                      return SizedBox(
+                        width: kCardWidth * 4,
+                        height: kCardHeight * 4,
+                        child: HighlightedCardView(card: highlightedCard),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  BlocBuilder<CardOptionsController, DeckCard?>(
+                    builder: (context, selectedCard) {
+                      if (selectedCard == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return CardOptionsView(card: selectedCard);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

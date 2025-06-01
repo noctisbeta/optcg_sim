@@ -1,10 +1,10 @@
-import 'package:common/game_state/cards/card.dart';
-import 'package:common/game_state/game_state.dart';
-import 'package:common/game_state/player.dart';
+import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class GameController extends Cubit<GameState> {
-  GameController() : super(const GameState.empty());
+  GameController() : super(GameState.empty());
 
   @override
   void emit(GameState state) {
@@ -15,6 +15,25 @@ final class GameController extends Cubit<GameState> {
     } else if (state.opponent.deckCards.isEmpty) {
       emit(state.copyWith(winner: state.me));
     }
+  }
+
+  void playCard(DeckCard card) {
+    if (state.currentPlayer != state.me) {
+      return;
+    }
+
+    final Player newMe = state.me.copyWith(
+      handCards: [
+        for (final DeckCard handCard in state.me.handCards)
+          if (handCard != card) handCard,
+      ],
+      characterCards: [
+        ...state.me.characterCards,
+        card as CharacterCard,
+      ],
+    );
+
+    emit(state.copyWith(me: newMe));
   }
 
   void passTurn() {
@@ -39,9 +58,17 @@ final class GameController extends Cubit<GameState> {
         donCards: [
           ...state.me.donCards,
           if (state.me.donCards.length < GameState.maxDonCards)
-            const DonCard(isActive: true, isFrozen: false),
+            DonCard(
+              id: state.me.donCards.length + 1,
+              isActive: true,
+              isFrozen: false,
+            ),
           if (state.me.donCards.length + 1 < GameState.maxDonCards)
-            const DonCard(isActive: true, isFrozen: false),
+            DonCard(
+              id: state.me.donCards.length + 1,
+              isActive: true,
+              isFrozen: false,
+            ),
         ],
       );
       emit(state.copyWith(me: newMe));
@@ -50,9 +77,17 @@ final class GameController extends Cubit<GameState> {
         donCards: [
           ...state.opponent.donCards,
           if (state.opponent.donCards.length < GameState.maxDonCards)
-            const DonCard(isActive: true, isFrozen: false),
+            DonCard(
+              id: -state.opponent.donCards.length + 1,
+              isActive: true,
+              isFrozen: false,
+            ),
           if (state.opponent.donCards.length + 1 < GameState.maxDonCards)
-            const DonCard(isActive: true, isFrozen: false),
+            DonCard(
+              id: -state.opponent.donCards.length + 1,
+              isActive: true,
+              isFrozen: false,
+            ),
         ],
       );
       emit(state.copyWith(opponent: newOpponent));

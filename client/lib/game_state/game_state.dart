@@ -1,5 +1,5 @@
-import 'package:common/game_state/player.dart';
-import 'package:meta/meta.dart';
+import 'package:client/game_state/player.dart';
+import 'package:flutter/material.dart' show immutable;
 
 @immutable
 final class GameState {
@@ -10,9 +10,9 @@ final class GameState {
     required this.winner,
   });
 
-  const GameState.empty()
-    : me = const Player.empty(),
-      opponent = const Player.empty2(),
+  GameState.empty()
+    : me = Player.empty(),
+      opponent = Player.empty2(),
       turn = 1,
       winner = null;
 
