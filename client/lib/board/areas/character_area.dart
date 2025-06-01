@@ -33,22 +33,14 @@ class CharacterArea extends StatelessWidget {
           ),
         ),
 
-        Positioned(
-          left: 0,
-          top: 0,
-          bottom: 0,
-          child: FittedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: cards
-                  .map(
-                    (card) => SizedBox(
-                      width: kCardWidth,
-                      height: kCardHeight,
-                      child: CharacterCardView(card: card),
-                    ),
-                  )
-                  .toList(),
+        ...cards.indexed.map(
+          (tuple) => Positioned(
+            left: kCardHeight - kCardWidth + tuple.$1 * kCardHeight,
+            top: 0,
+            child: SizedBox(
+              width: kCardWidth,
+              height: kCardHeight,
+              child: CharacterCardView(card: tuple.$2),
             ),
           ),
         ),

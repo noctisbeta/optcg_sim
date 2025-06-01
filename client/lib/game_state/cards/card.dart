@@ -8,8 +8,8 @@ part 'don_card.dart';
 part 'leader_card.dart';
 part 'stage_card.dart';
 
-sealed class Card {
-  const Card({
+sealed class GameCard {
+  const GameCard({
     required this.id,
   });
 

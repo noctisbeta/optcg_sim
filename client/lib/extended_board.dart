@@ -1,13 +1,14 @@
 import 'package:client/board/board.dart';
 import 'package:client/card_views/card_highlight_controller.dart';
-import 'package:client/card_views/card_options_controller.dart';
-import 'package:client/card_views/card_options_view.dart';
+import 'package:client/card_views/card_options/card_options_controller.dart';
+import 'package:client/card_views/card_options/card_options_state.dart';
+import 'package:client/card_views/card_options/card_options_view.dart';
 import 'package:client/card_views/highlighted_card_view.dart';
 import 'package:client/constants.dart';
 import 'package:client/game_controller.dart';
-import 'package:client/game_state/cards/card.dart' hide Card;
+import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/game_state.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExtendedBoard extends StatelessWidget {
@@ -62,7 +63,7 @@ class ExtendedBoard extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  BlocBuilder<CardHighlightController, DeckCard?>(
+                  BlocBuilder<CardHighlightController, GameCard?>(
                     builder: (context, highlightedCard) {
                       if (highlightedCard == null) {
                         return const SizedBox(
@@ -80,13 +81,14 @@ class ExtendedBoard extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 20),
-                  BlocBuilder<CardOptionsController, DeckCard?>(
-                    builder: (context, selectedCard) {
-                      if (selectedCard == null) {
-                        return const SizedBox.shrink();
-                      }
+                  BlocBuilder<CardOptionsController, CardOptionsState>(
+                    builder: (context, state) {
+                      final GameCard? card = state.selectedCard;
 
-                      return CardOptionsView(card: selectedCard);
+                      return switch (card) {
+                        GameCard() => CardOptionsView(card: card),
+                        _ => const SizedBox.shrink(),
+                      };
                     },
                   ),
                 ],

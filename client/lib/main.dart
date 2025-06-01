@@ -1,5 +1,5 @@
 import 'package:client/card_views/card_highlight_controller.dart';
-import 'package:client/card_views/card_options_controller.dart';
+import 'package:client/card_views/card_options/card_options_controller.dart';
 import 'package:client/extended_board.dart';
 import 'package:client/game_controller.dart';
 import 'package:flutter/material.dart';

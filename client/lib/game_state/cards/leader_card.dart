@@ -1,6 +1,6 @@
 part of 'card.dart';
 
-final class LeaderCard extends Card {
+final class LeaderCard extends GameCard {
   const LeaderCard({
     required super.id,
     required this.power,

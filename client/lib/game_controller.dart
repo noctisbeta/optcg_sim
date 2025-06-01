@@ -17,9 +17,59 @@ final class GameController extends Cubit<GameState> {
     }
   }
 
+  void attackWithLeader() {
+    if (state.currentPlayer != state.me) {
+      return;
+    }
+
+    final Player newMe = state.me.copyWith(
+      leaderCard: state.me.leaderCard.copyWith(
+        isActive: false,
+      ),
+    );
+
+    emit(state.copyWith(me: newMe));
+  }
+
+  void startGame(Player me, Player opponent) {
+    final myDeckCards = List<DeckCard>.from(me.deckCards)..shuffle();
+    final List<DeckCard> firstHand = [];
+
+    for (int i = 0; i < 5; i++) {
+      if (myDeckCards.isNotEmpty) {
+        firstHand.add(myDeckCards.removeAt(0));
+      }
+    }
+
+    final Player newMe = me.copyWith(
+      deckCards: myDeckCards,
+      handCards: firstHand,
+    );
+
+    emit(state.copyWith(me: newMe));
+  }
+
   void playCard(DeckCard card) {
     if (state.currentPlayer != state.me) {
       return;
+    }
+
+    if (state.me.donCards.where((donCard) => donCard.isActive).length <
+        card.cost) {
+      return;
+    }
+
+    final newDonCards = <DonCard>[];
+
+    int costCopy = card.cost;
+
+    for (final DonCard donCard in state.me.donCards) {
+      if (donCard.isActive && costCopy > 0) {
+        newDonCards.add(donCard.copyWith(isActive: false));
+        costCopy--;
+      } else {
+        newDonCards.add(donCard);
+      }
     }
 
     final Player newMe = state.me.copyWith(
@@ -27,6 +77,7 @@ final class GameController extends Cubit<GameState> {
         for (final DeckCard handCard in state.me.handCards)
           if (handCard != card) handCard,
       ],
+      donCards: newDonCards,
       characterCards: [
         ...state.me.characterCards,
         card as CharacterCard,

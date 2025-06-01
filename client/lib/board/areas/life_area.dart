@@ -1,5 +1,8 @@
 import 'package:client/constants.dart';
+import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LifeArea extends StatelessWidget {
   const LifeArea({super.key});
@@ -9,6 +12,7 @@ class LifeArea extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double kCardHeight = (screenHeight - 10 * kPadding) / 8;
     final double kCardWidth = kCardHeight * kCardAspectRatio;
+    final List<DeckCard> cards = context.watch<Player>().lifeCards;
 
     return Container(
       width: kCardWidth,

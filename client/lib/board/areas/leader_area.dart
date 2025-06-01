@@ -1,8 +1,6 @@
-import 'dart:math';
-
+import 'package:client/card_views/leader/leader_card_view.dart';
 import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
-import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,36 +32,10 @@ class LeaderArea extends StatelessWidget {
             ),
           ),
           Center(
-            child: Transform.rotate(
-              angle: -pi / 2,
-              child: Container(
-                width: kCardWidth,
-                height: kCardHeight,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: leaderCard.colors
-                        .map(
-                          (color) => switch (color) {
-                            CardColor.red => Colors.red,
-                            CardColor.blue => Colors.blue,
-                            CardColor.green => Colors.green,
-                            CardColor.yellow => Colors.yellow,
-                            CardColor.purple => Colors.purple,
-                            CardColor.black => Colors.black,
-                          },
-                        )
-                        .toList(),
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  leaderCard.name,
-                  style: const TextStyle(color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+            child: SizedBox(
+              width: kCardWidth,
+              height: kCardHeight,
+              child: LeaderCardView(leader: leaderCard),
             ),
           ),
         ],

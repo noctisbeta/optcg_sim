@@ -1,6 +1,6 @@
 part of 'card.dart';
 
-final class DonCard extends Card {
+final class DonCard extends GameCard {
   const DonCard({
     required super.id,
     required this.isActive,

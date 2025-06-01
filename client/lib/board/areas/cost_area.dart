@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/player.dart';
@@ -48,34 +50,37 @@ class CostArea extends StatelessWidget {
             return Positioned(
               left: leftPosition,
               top: 0,
-              child: Container(
-                width: kCardWidth,
-                height: kCardHeight,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black54,
-                  ),
-                  color: Colors.yellow,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 3,
-                      offset: const Offset(1, 1),
+              child: Transform.rotate(
+                angle: entry.value.isActive ? 0 : -pi / 2,
+                child: Container(
+                  width: kCardWidth,
+                  height: kCardHeight,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black54,
                     ),
-                  ],
-                ),
-                child: const FittedBox(
-                  child: Padding(
-                    padding: EdgeInsets.all(
-                      kPadding / 2,
-                    ), // Padding for the text
-                    child: Text(
-                      'DON!!', // Updated text
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
+                    color: Colors.yellow,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 3,
+                        offset: const Offset(1, 1),
                       ),
-                      textAlign: TextAlign.center,
+                    ],
+                  ),
+                  child: const FittedBox(
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        kPadding / 2,
+                      ), // Padding for the text
+                      child: Text(
+                        'DON!!', // Updated text
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),

@@ -1,6 +1,6 @@
 part of 'card.dart';
 
-sealed class DeckCard extends Card {
+sealed class DeckCard extends GameCard {
   const DeckCard({
     required super.id,
     required this.name,

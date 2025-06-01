@@ -6,17 +6,18 @@ import 'package:client/game_state/cards/card_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HandCardView extends StatelessWidget {
-  const HandCardView({required this.card, super.key});
+class CharacterAreaCardView extends StatelessWidget {
+  const CharacterAreaCardView({required this.card, super.key});
 
-  final DeckCard card;
+  final CharacterCard card;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.translucent,
     onTap: () {
       context.read<CardOptionsController>().selectCard(
         card,
-        CardLocation.handArea,
+        CardLocation.characterArea,
       );
     },
     child: MouseRegion(
@@ -25,9 +26,8 @@ class HandCardView extends StatelessWidget {
       onExit: (_) => context.read<CardHighlightController>().clearHighlight(),
       child: switch (card) {
         CharacterCard() => CharacterCardView(
-          card: card as CharacterCard,
+          card: card,
         ),
-        _ => const SizedBox.shrink(),
       },
     ),
   );
