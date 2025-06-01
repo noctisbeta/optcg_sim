@@ -5,8 +5,8 @@ import 'package:client/game_state/game_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-final class GameController extends Cubit<GameState> {
-  GameController() : super(GameState.empty()) {
+final class SingleplayerGameController extends Cubit<GameState> {
+  SingleplayerGameController() : super(GameState.empty()) {
     startGame();
   }
 
@@ -38,11 +38,173 @@ final class GameController extends Cubit<GameState> {
     _attackCompleter?.complete(card);
   }
 
-  Future<void> attackWithLeader() async {
-    if (state.currentPlayer != state.me) {
+  Future<void> attackWithCharacter(CharacterCard card) async {
+    if (state.currentPlayer == state.me) {
+      await _attackWithCharacterMe(card);
+    } else {
+      await _attackWithCharacterOpponent(card);
+    }
+  }
+
+  Future<void> _attackWithCharacterOpponent(CharacterCard card) async {
+    if (!state.opponent.characterCards.contains(card)) {
       return;
     }
 
+    final GameState attackingState = state.copyWith(
+      isAttacking: true,
+    );
+
+    emit(attackingState);
+
+    _attackCompleter = Completer<GameCard?>();
+
+    final GameCard? targetCard = await _attackCompleter?.future;
+
+    if (targetCard is! CharacterCard && targetCard is! LeaderCard) {
+      emit(state.copyWith(isAttacking: false));
+      return;
+    }
+
+    if (targetCard is CharacterCard) {
+      if (card.power >= targetCard.power) {
+        final Player newOpponent = state.opponent.copyWith(
+          characterCards: [
+            ...state.opponent.characterCards.where((c) => c != targetCard),
+          ],
+        );
+        emit(state.copyWith(opponent: newOpponent, isAttacking: false));
+      }
+    }
+
+    if (targetCard is LeaderCard) {
+      if (card.power >= targetCard.power) {
+        final Player newOpponent = state.opponent.copyWith(
+          leaderCard: state.opponent.leaderCard.copyWith(
+            isActive: false,
+          ),
+        );
+        emit(state.copyWith(opponent: newOpponent, isAttacking: false));
+      }
+    }
+  }
+
+  Future<void> _attackWithCharacterMe(CharacterCard card) async {
+    final GameState attackingState = state.copyWith(
+      isAttacking: true,
+    );
+
+    emit(attackingState);
+
+    _attackCompleter = Completer<GameCard?>();
+
+    final GameCard? targetCard = await _attackCompleter?.future;
+
+    if (targetCard is! CharacterCard && targetCard is! LeaderCard) {
+      emit(state.copyWith(isAttacking: false));
+      return;
+    }
+
+    if (targetCard is CharacterCard) {
+      if (card.power >= targetCard.power) {
+        final List<CharacterCard> newCharacterCards = [
+          for (final character in state.me.characterCards)
+            if (character == card)
+              character.copyWith(isActive: false)
+            else
+              character,
+        ];
+
+        final Player newMe = state.me.copyWith(
+          characterCards: newCharacterCards,
+        );
+        emit(state.copyWith(me: newMe, isAttacking: false));
+      }
+    }
+
+    if (targetCard is LeaderCard) {
+      final List<CharacterCard> newCharacterCards = [
+        for (final character in state.me.characterCards)
+          if (character == card)
+            character.copyWith(isActive: false)
+          else
+            character,
+      ];
+
+      if (card.power >= targetCard.power) {}
+
+      final Player newMe = state.me.copyWith(
+        characterCards: newCharacterCards,
+      );
+
+      emit(state.copyWith(me: newMe, isAttacking: false));
+    }
+  }
+
+  Future<void> attackWithLeader() async {
+    if (state.currentPlayer == state.me) {
+      await _attackWithLeaderMe();
+    } else {
+      await _attackWithLeaderOpponent();
+    }
+  }
+
+  Future<void> _attackWithLeaderOpponent() async {
+    if (!state.opponent.leaderCard.isActive) {
+      return;
+    }
+
+    final GameState attackingState = state.copyWith(
+      isAttacking: true,
+    );
+
+    emit(attackingState);
+
+    _attackCompleter = Completer<GameCard?>();
+
+    final GameCard? card = await _attackCompleter?.future;
+
+    if (card is! LeaderCard && card is! CharacterCard) {
+      emit(state.copyWith(isAttacking: false));
+      return;
+    }
+
+    if (card is LeaderCard) {
+      if (state.opponent.leaderCard.power >= card.power) {
+        if (state.me.lifeCards.isEmpty) {
+          emit(state.copyWith(winnerFn: () => state.opponent));
+          return;
+        }
+
+        final myLifeCards = List<DeckCard>.from(state.me.lifeCards);
+        final DeckCard topLife = myLifeCards.removeAt(0);
+
+        final Player newMe = state.me.copyWith(
+          lifeCards: myLifeCards,
+          handCards: [
+            ...state.me.handCards,
+            topLife,
+          ],
+        );
+
+        emit(state.copyWith(me: newMe, isAttacking: false));
+      }
+    }
+
+    if (card is CharacterCard) {
+      if (state.opponent.leaderCard.power >= card.power) {}
+    }
+
+    final Player newOpponent = state.opponent.copyWith(
+      leaderCard: state.opponent.leaderCard.copyWith(
+        isActive: false,
+      ),
+    );
+
+    emit(state.copyWith(opponent: newOpponent, isAttacking: false));
+  }
+
+  Future<void> _attackWithLeaderMe() async {
     if (!state.me.leaderCard.isActive) {
       return;
     }
@@ -147,10 +309,48 @@ final class GameController extends Cubit<GameState> {
   }
 
   void playCard(DeckCard card) {
-    if (state.currentPlayer != state.me) {
+    if (state.currentPlayer == state.me) {
+      _playCardMe(card);
+    } else {
+      _playCardOpponent(card);
+    }
+  }
+
+  void _playCardOpponent(DeckCard card) {
+    if (state.opponent.donCards.where((donCard) => donCard.isActive).length <
+        card.cost) {
       return;
     }
 
+    final newDonCards = <DonCard>[];
+
+    int costCopy = card.cost;
+
+    for (final DonCard donCard in state.opponent.donCards) {
+      if (donCard.isActive && costCopy > 0) {
+        newDonCards.add(donCard.copyWith(isActive: false));
+        costCopy--;
+      } else {
+        newDonCards.add(donCard);
+      }
+    }
+
+    final Player newOpponent = state.opponent.copyWith(
+      handCards: [
+        for (final DeckCard handCard in state.opponent.handCards)
+          if (handCard != card) handCard,
+      ],
+      donCards: newDonCards,
+      characterCards: [
+        ...state.opponent.characterCards,
+        card as CharacterCard,
+      ],
+    );
+
+    emit(state.copyWith(opponent: newOpponent));
+  }
+
+  void _playCardMe(DeckCard card) {
     if (state.me.donCards.where((donCard) => donCard.isActive).length <
         card.cost) {
       return;

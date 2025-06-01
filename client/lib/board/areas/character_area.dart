@@ -1,4 +1,4 @@
-import 'package:client/card_views/character_card_view.dart';
+import 'package:client/card_views/character_area_card_view.dart';
 import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/player.dart';
@@ -40,7 +40,7 @@ class CharacterArea extends StatelessWidget {
             child: SizedBox(
               width: kCardWidth,
               height: kCardHeight,
-              child: CharacterCardView(card: tuple.$2),
+              child: CharacterAreaCardView(card: tuple.$2),
             ),
           ),
         ),

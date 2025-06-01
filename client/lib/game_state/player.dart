@@ -15,6 +15,7 @@ final class Player extends Equatable {
     required this.trashCards,
     required this.characterCards,
     required this.handCards,
+    required this.isOpponent,
   });
 
   Player.empty()
@@ -22,6 +23,7 @@ final class Player extends Equatable {
       lifeCards = const [],
       donCards = const [DonCard(id: 1, isActive: true, isFrozen: false)],
       stageCard = null,
+      isOpponent = false,
       leaderCard = const LeaderCard(
         id: 1,
         power: 5000,
@@ -34,7 +36,6 @@ final class Player extends Equatable {
         isActive: true,
         isFrozen: false,
       ),
-
       deckCards =
           List.generate(
             20,
@@ -67,6 +68,7 @@ final class Player extends Equatable {
       lifeCards = const [],
       donCards = const [],
       stageCard = null,
+      isOpponent = true,
       leaderCard = const LeaderCard(
         id: 1,
         power: 5000,
@@ -93,6 +95,7 @@ final class Player extends Equatable {
   final List<DeckCard> trashCards;
   final List<CharacterCard> characterCards;
   final List<DeckCard> handCards;
+  final bool isOpponent;
 
   Player copyWith({
     String? name,
@@ -104,6 +107,7 @@ final class Player extends Equatable {
     List<DeckCard>? trashCards,
     List<CharacterCard>? characterCards,
     List<DeckCard>? handCards,
+    bool? isOpponent,
   }) => Player(
     name: name ?? this.name,
     lifeCards: lifeCards ?? this.lifeCards,
@@ -114,6 +118,7 @@ final class Player extends Equatable {
     trashCards: trashCards ?? this.trashCards,
     characterCards: characterCards ?? this.characterCards,
     handCards: handCards ?? this.handCards,
+    isOpponent: isOpponent ?? this.isOpponent,
   );
 
   @override
