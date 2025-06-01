@@ -12,6 +12,7 @@ final class LeaderCard extends GameCard {
     required this.blockNumber,
     required this.isActive,
     required this.isFrozen,
+    required this.attachedDonCards,
   });
 
   final int power;
@@ -23,6 +24,7 @@ final class LeaderCard extends GameCard {
   final int blockNumber;
   final bool isActive;
   final bool isFrozen;
+  final List<DonCard> attachedDonCards;
 
   LeaderCard copyWith({
     int? power,
@@ -35,6 +37,7 @@ final class LeaderCard extends GameCard {
     bool? isActive,
     bool? isFrozen,
     int? id,
+    List<DonCard>? attachedDonCards,
   }) => LeaderCard(
     id: id ?? this.id,
     power: power ?? this.power,
@@ -46,5 +49,6 @@ final class LeaderCard extends GameCard {
     blockNumber: blockNumber ?? this.blockNumber,
     isActive: isActive ?? this.isActive,
     isFrozen: isFrozen ?? this.isFrozen,
+    attachedDonCards: attachedDonCards ?? this.attachedDonCards,
   );
 }

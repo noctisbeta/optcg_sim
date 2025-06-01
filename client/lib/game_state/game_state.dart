@@ -10,6 +10,7 @@ final class GameState {
     required this.turn,
     required this.winner,
     required this.combatState,
+    required this.isAttachingDon,
   });
 
   GameState.empty()
@@ -17,7 +18,8 @@ final class GameState {
       opponent = Player.empty2(),
       turn = 1,
       winner = null,
-      combatState = CombatState.none;
+      combatState = CombatState.none,
+      isAttachingDon = false;
 
   static const int maxDonCards = 10;
 
@@ -26,6 +28,7 @@ final class GameState {
   final int turn;
   final Player? winner;
   final CombatState combatState;
+  final bool isAttachingDon;
 
   Player get currentPlayer => turn.isOdd ? me : opponent;
 
@@ -35,11 +38,13 @@ final class GameState {
     int? turn,
     Player? Function()? winnerFn,
     CombatState? combatState,
+    bool? isAttachingDon,
   }) => GameState(
     me: me ?? this.me,
     opponent: opponent ?? this.opponent,
     turn: turn ?? this.turn,
     winner: winnerFn != null ? winnerFn() : winner,
     combatState: combatState ?? this.combatState,
+    isAttachingDon: isAttachingDon ?? this.isAttachingDon,
   );
 }

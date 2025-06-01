@@ -15,6 +15,7 @@ class CharacterCard extends DeckCard {
     required this.isFrozen,
     required this.isActive,
     required this.counter,
+    required this.attachedDonCards,
   });
 
   final int power;
@@ -22,6 +23,7 @@ class CharacterCard extends DeckCard {
   final int counter;
   final bool isFrozen;
   final bool isActive;
+  final List<DonCard> attachedDonCards;
 
   CharacterCard copyWith({
     String? name,
@@ -36,6 +38,7 @@ class CharacterCard extends DeckCard {
     bool? isActive,
     int? counter,
     int? id,
+    List<DonCard>? attachedDonCards,
   }) => CharacterCard(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -49,5 +52,6 @@ class CharacterCard extends DeckCard {
     isFrozen: isFrozen ?? this.isFrozen,
     isActive: isActive ?? this.isActive,
     counter: counter ?? this.counter,
+    attachedDonCards: attachedDonCards ?? this.attachedDonCards,
   );
 }

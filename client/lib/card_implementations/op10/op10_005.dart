@@ -21,5 +21,6 @@ final class OP10_005 extends CharacterCard {
         isFrozen: false,
         isActive: true,
         counter: 1000,
+        attachedDonCards: const [],
       );
 }

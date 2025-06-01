@@ -35,6 +35,7 @@ final class Player extends Equatable {
         blockNumber: 1,
         isActive: true,
         isFrozen: false,
+        attachedDonCards: [],
       ),
       deckCards =
           List.generate(
@@ -57,6 +58,7 @@ final class Player extends Equatable {
               isFrozen: false,
               isActive: false,
               counter: 2000,
+              attachedDonCards: [],
             ),
           ),
       trashCards = const [],
@@ -80,6 +82,7 @@ final class Player extends Equatable {
         blockNumber: 1,
         isActive: true,
         isFrozen: false,
+        attachedDonCards: [],
       ),
       deckCards = List.generate(20, (i) => OP10_005(id: i)),
       trashCards = const [],

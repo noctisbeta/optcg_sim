@@ -21,6 +21,18 @@ class CardOptionsView extends StatelessWidget {
         BlocBuilder<CardOptionsController, CardOptionsState>(
           builder: (context, state) => Column(
             children: [
+              if (state.cardLocation == CardLocation.donArea) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    context
+                        .read<SingleplayerGameController>()
+                        .cancelDonSelection();
+                    context.read<CardOptionsController>().clearSelection();
+                  },
+                  child: const Text('Cancel'),
+                ),
+              ],
+
               if (gameState.combatState == CombatState.countering) ...[
                 ElevatedButton(
                   onPressed: () {

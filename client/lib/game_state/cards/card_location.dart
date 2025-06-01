@@ -3,4 +3,5 @@ enum CardLocation {
   handArea,
   leaderArea,
   stageArea,
+  donArea,
 }

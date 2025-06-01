@@ -17,6 +17,8 @@ final class SingleplayerGameController extends Cubit<GameState> {
 
   late final CombatHandler _combatHandler;
 
+  final List<DonCard> _selectedDonCards = [];
+
   @override
   void emit(GameState state) {
     super.emit(state);
@@ -44,6 +46,82 @@ final class SingleplayerGameController extends Cubit<GameState> {
 
   void resolveCounter() {
     _combatHandler.resolveCounter();
+  }
+
+  void attachDonCardToLeader(LeaderCard leaderCard) {
+    if (_selectedDonCards.isEmpty) {
+      return;
+    }
+
+    final LeaderCard newLeader = state.currentPlayer.leaderCard.copyWith(
+      attachedDonCards: [
+        ...state.currentPlayer.leaderCard.attachedDonCards,
+        ..._selectedDonCards,
+      ],
+    );
+
+    final List<DonCard> newDonCards = List.from(
+      state.currentPlayer.donCards,
+    );
+
+    for (final DonCard donCard in _selectedDonCards) {
+      if (newDonCards.contains(donCard)) {
+        newDonCards.remove(donCard);
+      }
+    }
+
+    final Player newPlayer = state.currentPlayer.copyWith(
+      donCards: newDonCards,
+      leaderCard: newLeader,
+    );
+
+    emit(
+      state.copyWith(
+        me: state.currentPlayer == state.me ? newPlayer : state.me,
+        opponent: state.currentPlayer == state.opponent
+            ? newPlayer
+            : state.opponent,
+        isAttachingDon: false,
+      ),
+    );
+
+    cancelDonSelection();
+  }
+
+  void selectDonCard(DonCard donCard) {
+    if (_selectedDonCards.contains(donCard)) {
+      _deselectDonCard(donCard);
+    }
+
+    _selectedDonCards.add(donCard);
+
+    emit(
+      state.copyWith(
+        isAttachingDon: true,
+      ),
+    );
+  }
+
+  void _deselectDonCard(DonCard donCard) {
+    _selectedDonCards.remove(donCard);
+
+    if (_selectedDonCards.isEmpty) {
+      emit(
+        state.copyWith(
+          isAttachingDon: false,
+        ),
+      );
+    }
+  }
+
+  void cancelDonSelection() {
+    _selectedDonCards.clear();
+
+    emit(
+      state.copyWith(
+        isAttachingDon: false,
+      ),
+    );
   }
 
   void startGame() {
@@ -261,7 +339,41 @@ final class SingleplayerGameController extends Cubit<GameState> {
           isActive: true,
         ),
       );
-      emit(state.copyWith(me: newMe));
+
+      final LeaderCard newLeader = newMe.leaderCard.copyWith(
+        attachedDonCards: [],
+      );
+
+      final List<DonCard> newDonCards = [
+        ...state.me.donCards,
+        ...state.me.leaderCard.attachedDonCards,
+      ];
+
+      final Player newMeWithLeader = newMe.copyWith(
+        leaderCard: newLeader,
+        donCards: newDonCards,
+      );
+
+      final newDonCardsFromChars = <DonCard>[
+        ...newMeWithLeader.donCards,
+      ];
+
+      for (final CharacterCard character in state.me.characterCards) {
+        if (character.attachedDonCards.isNotEmpty) {
+          newDonCardsFromChars.addAll(character.attachedDonCards);
+        }
+      }
+      final newCharsWithoutDon = <CharacterCard>[
+        for (final CharacterCard character in newMeWithLeader.characterCards)
+          character.copyWith(attachedDonCards: []),
+      ];
+
+      final Player newMeWithLeaderAndChars = newMeWithLeader.copyWith(
+        donCards: newDonCardsFromChars,
+        characterCards: newCharsWithoutDon,
+      );
+
+      emit(state.copyWith(me: newMeWithLeaderAndChars));
     } else {
       final Player newOpponent = state.opponent.copyWith(
         donCards: _refreshDonCards(state.opponent.donCards),
@@ -271,7 +383,43 @@ final class SingleplayerGameController extends Cubit<GameState> {
           isActive: true,
         ),
       );
-      emit(state.copyWith(opponent: newOpponent));
+
+      final LeaderCard newLeader = newOpponent.leaderCard.copyWith(
+        attachedDonCards: [],
+      );
+
+      final List<DonCard> newDonCards = [
+        ...state.opponent.donCards,
+        ...state.opponent.leaderCard.attachedDonCards,
+      ];
+
+      final Player newOpponentWithLeader = newOpponent.copyWith(
+        leaderCard: newLeader,
+        donCards: newDonCards,
+      );
+
+      final newDonCardsFromChars = <DonCard>[
+        ...newOpponentWithLeader.donCards,
+      ];
+
+      for (final CharacterCard character in state.opponent.characterCards) {
+        if (character.attachedDonCards.isNotEmpty) {
+          newDonCardsFromChars.addAll(character.attachedDonCards);
+        }
+      }
+      final newCharsWithoutDon = <CharacterCard>[
+        for (final CharacterCard character
+            in newOpponentWithLeader.characterCards)
+          character.copyWith(attachedDonCards: []),
+      ];
+
+      final Player newOpponentWithLeaderAndChars = newOpponentWithLeader
+          .copyWith(
+            donCards: newDonCardsFromChars,
+            characterCards: newCharsWithoutDon,
+          );
+
+      emit(state.copyWith(opponent: newOpponentWithLeaderAndChars));
     }
   }
 
@@ -297,6 +445,7 @@ final class SingleplayerGameController extends Cubit<GameState> {
     if (leaderCard.isFrozen) {
       return leaderCard.copyWith(isActive: false, isFrozen: false);
     }
+
     return leaderCard.copyWith(isActive: true);
   }
 }

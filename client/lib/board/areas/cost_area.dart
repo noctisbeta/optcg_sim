@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:client/card_views/don_card_view.dart';
 import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/player.dart';
@@ -52,36 +53,11 @@ class CostArea extends StatelessWidget {
               top: 0,
               child: Transform.rotate(
                 angle: entry.value.isActive ? 0 : -pi / 2,
-                child: Container(
+                child: SizedBox(
                   width: kCardWidth,
                   height: kCardHeight,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black54,
-                    ),
-                    color: Colors.yellow,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 3,
-                        offset: const Offset(1, 1),
-                      ),
-                    ],
-                  ),
-                  child: const FittedBox(
-                    child: Padding(
-                      padding: EdgeInsets.all(
-                        kPadding / 2,
-                      ), // Padding for the text
-                      child: Text(
-                        'DON!!', // Updated text
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                  child: DonCardView(
+                    card: entry.value,
                   ),
                 ),
               ),

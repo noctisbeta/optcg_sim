@@ -19,6 +19,13 @@ class LeaderCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
+      if (context.read<SingleplayerGameController>().state.isAttachingDon) {
+        context.read<SingleplayerGameController>().attachDonCardToLeader(
+          leader,
+        );
+        return;
+      }
+
       if (context.read<SingleplayerGameController>().state.combatState ==
           CombatState.attacking) {
         context.read<SingleplayerGameController>().chooseAttackTarget(leader);
@@ -34,48 +41,69 @@ class LeaderCardView extends StatelessWidget {
         CardLocation.leaderArea,
       );
     },
-    child: MouseRegion(
-      onEnter: (_) =>
-          context.read<CardHighlightController>().highlightCard(leader),
-      onExit: (_) => context.read<CardHighlightController>().clearHighlight(),
-      child: Transform.rotate(
-        angle: leader.isActive ? 0 : -pi / 2,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: leader.colors
-                  .map(
-                    (color) => switch (color) {
-                      CardColor.red => Colors.red,
-                      CardColor.blue => Colors.blue,
-                      CardColor.green => Colors.green,
-                      CardColor.yellow => Colors.yellow,
-                      CardColor.purple => Colors.purple,
-                      CardColor.black => Colors.black,
-                    },
-                  )
-                  .toList(),
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    child: Stack(
+      children: [
+        MouseRegion(
+          onEnter: (_) =>
+              context.read<CardHighlightController>().highlightCard(leader),
+          onExit: (_) =>
+              context.read<CardHighlightController>().clearHighlight(),
+          child: Transform.rotate(
+            angle: leader.isActive ? 0 : -pi / 2,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: leader.colors
+                      .map(
+                        (color) => switch (color) {
+                          CardColor.red => Colors.red,
+                          CardColor.blue => Colors.blue,
+                          CardColor.green => Colors.green,
+                          CardColor.yellow => Colors.yellow,
+                          CardColor.purple => Colors.purple,
+                          CardColor.black => Colors.black,
+                        },
+                      )
+                      .toList(),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    leader.power.toString(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    leader.name,
+                    style: const TextStyle(color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
-          child: Column(
-            children: [
-              Text(
-                leader.power.toString(),
-                style: const TextStyle(color: Colors.white, fontSize: 24),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                leader.name,
-                style: const TextStyle(color: Colors.black),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
         ),
-      ),
+        if (leader.attachedDonCards.isNotEmpty)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${leader.attachedDonCards.length}',
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ),
+          ),
+      ],
     ),
   );
 }
