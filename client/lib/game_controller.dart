@@ -6,7 +6,9 @@ import 'package:client/game_state/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class GameController extends Cubit<GameState> {
-  GameController() : super(GameState.empty());
+  GameController() : super(GameState.empty()) {
+    startGame();
+  }
 
   Completer<GameCard?>? _attackCompleter;
 
@@ -27,10 +29,6 @@ final class GameController extends Cubit<GameState> {
   }
 
   void chooseAttackTarget(GameCard? card) {
-    if (_attackCompleter == null) {
-      return;
-    }
-
     if (card == null) {
       _attackCompleter?.complete(null);
       _attackCompleter = null;
@@ -59,9 +57,35 @@ final class GameController extends Cubit<GameState> {
 
     final GameCard? card = await _attackCompleter?.future;
 
-    if (card == null) {
+    if (card is! LeaderCard && card is! CharacterCard) {
       emit(state.copyWith(isAttacking: false));
       return;
+    }
+
+    if (card is LeaderCard) {
+      if (state.me.leaderCard.power >= card.power) {
+        if (state.opponent.lifeCards.isEmpty) {
+          emit(state.copyWith(winnerFn: () => state.me));
+          return;
+        }
+
+        final oppoLifeCards = List<DeckCard>.from(state.opponent.lifeCards);
+        final DeckCard topLife = oppoLifeCards.removeAt(0);
+
+        final Player newOpponent = state.opponent.copyWith(
+          lifeCards: oppoLifeCards,
+          handCards: [
+            ...state.opponent.handCards,
+            topLife,
+          ],
+        );
+
+        emit(state.copyWith(opponent: newOpponent, isAttacking: false));
+      }
+    }
+
+    if (card is CharacterCard) {
+      if (state.me.leaderCard.power >= card.power) {}
     }
 
     final Player newMe = state.me.copyWith(
@@ -73,22 +97,53 @@ final class GameController extends Cubit<GameState> {
     emit(state.copyWith(me: newMe, isAttacking: false));
   }
 
-  void startGame(Player me, Player opponent) {
-    final myDeckCards = List<DeckCard>.from(me.deckCards)..shuffle();
-    final List<DeckCard> firstHand = [];
+  void startGame() {
+    final myDeckCards = List<DeckCard>.from(state.me.deckCards)..shuffle();
 
+    final List<DeckCard> firstHand = [];
     for (int i = 0; i < 5; i++) {
       if (myDeckCards.isNotEmpty) {
         firstHand.add(myDeckCards.removeAt(0));
       }
     }
 
-    final Player newMe = me.copyWith(
+    final List<DeckCard> lifeCards = [];
+    for (int i = 0; i < 5; i++) {
+      if (myDeckCards.isNotEmpty) {
+        lifeCards.add(myDeckCards.removeAt(0));
+      }
+    }
+
+    final Player newMe = state.me.copyWith(
       deckCards: myDeckCards,
       handCards: firstHand,
+      lifeCards: lifeCards,
     );
 
-    emit(state.copyWith(me: newMe));
+    final oppoDeckCards = List<DeckCard>.from(state.opponent.deckCards)
+      ..shuffle();
+
+    final List<DeckCard> oppoFirstHand = [];
+    for (int i = 0; i < 5; i++) {
+      if (oppoDeckCards.isNotEmpty) {
+        oppoFirstHand.add(oppoDeckCards.removeAt(0));
+      }
+    }
+
+    final List<DeckCard> oppoLifeCards = [];
+    for (int i = 0; i < 5; i++) {
+      if (oppoDeckCards.isNotEmpty) {
+        oppoLifeCards.add(oppoDeckCards.removeAt(0));
+      }
+    }
+
+    final Player newOpponent = state.opponent.copyWith(
+      deckCards: oppoDeckCards,
+      handCards: oppoFirstHand,
+      lifeCards: oppoLifeCards,
+    );
+
+    emit(state.copyWith(me: newMe, opponent: newOpponent));
   }
 
   void playCard(DeckCard card) {
