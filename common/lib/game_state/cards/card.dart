@@ -1,5 +1,5 @@
-import 'properties/card_attribute.dart';
-import 'properties/card_color.dart';
+import 'package:common/game_state/cards/properties/card_attribute.dart';
+import 'package:common/game_state/cards/properties/card_color.dart';
 
 part 'character_card.dart';
 part 'deck_card.dart';

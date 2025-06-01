@@ -9,6 +9,8 @@ final class LeaderCard extends Card {
     required this.life,
     required this.type,
     required this.blockNumber,
+    required this.isActive,
+    required this.isFrozen,
   });
 
   final int power;
@@ -18,4 +20,28 @@ final class LeaderCard extends Card {
   final int life;
   final String type;
   final int blockNumber;
+  final bool isActive;
+  final bool isFrozen;
+
+  LeaderCard copyWith({
+    int? power,
+    CardAttribute? attribute,
+    List<CardColor>? colors,
+    String? name,
+    int? life,
+    String? type,
+    int? blockNumber,
+    bool? isActive,
+    bool? isFrozen,
+  }) => LeaderCard(
+    power: power ?? this.power,
+    attribute: attribute ?? this.attribute,
+    colors: colors ?? this.colors,
+    name: name ?? this.name,
+    life: life ?? this.life,
+    type: type ?? this.type,
+    blockNumber: blockNumber ?? this.blockNumber,
+    isActive: isActive ?? this.isActive,
+    isFrozen: isFrozen ?? this.isFrozen,
+  );
 }

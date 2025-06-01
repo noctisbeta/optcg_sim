@@ -10,23 +10,62 @@ class ExtendedBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: BlocBuilder<GameController, GameState>(
-      builder:
-          (context, state) => Column(
+      builder: (context, state) => Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: RepositoryProvider(
-                  create: (context) => state.opponent,
-                  child: const Board(isOpponent: true),
-                ),
+              Column(
+                children: [
+                  Expanded(
+                    child: RepositoryProvider.value(
+                      value: state.opponent,
+                      child: Board(
+                        isOpponent: true,
+                        isTurnPlayer: state.currentPlayer == state.opponent,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: RepositoryProvider.value(
+                      value: state.me,
+                      child: Board(
+                        isOpponent: false,
+                        isTurnPlayer: state.currentPlayer == state.me,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: RepositoryProvider(
-                  create: (context) => state.me,
-                  child: const Board(isOpponent: false),
+              const SizedBox(width: 20),
+              IconButton(
+                icon: const Icon(Icons.done_sharp),
+                onPressed: () {
+                  context.read<GameController>().passTurn();
+                },
+              ),
+              const SizedBox(width: 20),
+              Text(
+                'Turn: ${state.turn}',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
+          if (state.winner != null)
+            Center(
+              child: Text(
+                '${state.winner!.name} wins!',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     ),
   );
 }

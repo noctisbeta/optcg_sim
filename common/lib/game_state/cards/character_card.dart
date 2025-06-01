@@ -10,10 +10,40 @@ final class CharacterCard extends DeckCard {
     required super.blockNumber,
     required this.power,
     required this.attributes,
+    required this.isFrozen,
+    required this.isActive,
     this.counter,
   });
 
   final int power;
   final List<CardAttribute> attributes;
   final int? counter;
+  final bool isFrozen;
+  final bool isActive;
+
+  CharacterCard copyWith({
+    String? name,
+    String? type,
+    int? cost,
+    CardColor? color,
+    String? cardNumber,
+    int? blockNumber,
+    int? power,
+    List<CardAttribute>? attributes,
+    bool? isFrozen,
+    bool? isActive,
+    int? counter,
+  }) => CharacterCard(
+    name: name ?? this.name,
+    type: type ?? this.type,
+    cost: cost ?? this.cost,
+    color: color ?? this.color,
+    cardNumber: cardNumber ?? this.cardNumber,
+    blockNumber: blockNumber ?? this.blockNumber,
+    power: power ?? this.power,
+    attributes: attributes ?? this.attributes,
+    isFrozen: isFrozen ?? this.isFrozen,
+    isActive: isActive ?? this.isActive,
+    counter: counter ?? this.counter,
+  );
 }

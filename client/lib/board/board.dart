@@ -13,16 +13,34 @@ import 'package:client/util/list_extension.dart';
 import 'package:flutter/material.dart';
 
 class Board extends StatelessWidget {
-  const Board({required this.isOpponent, super.key});
+  const Board({
+    required this.isOpponent,
+    required this.isTurnPlayer,
+    super.key,
+  });
 
   final bool isOpponent;
+  final bool isTurnPlayer;
 
   @override
   Widget build(BuildContext context) => Container(
-    color: isOpponent ? Colors.pink[100] : Colors.lightGreen[100],
+    padding: const EdgeInsets.symmetric(horizontal: kPadding),
+    decoration: BoxDecoration(
+      color: isOpponent ? Colors.pink[100] : Colors.lightGreen[100],
+      border: Border.symmetric(
+        vertical: BorderSide(
+          color: isOpponent ? Colors.pink[300]! : Colors.lightGreen[300]!,
+          width: isTurnPlayer ? 5 : 1,
+        ),
+        horizontal: BorderSide(
+          color: isOpponent ? Colors.pink[300]! : Colors.lightGreen[300]!,
+        ),
+      ),
+    ),
     child: Column(
-      mainAxisAlignment:
-          isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isOpponent
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         const SizedBox(height: kPadding),
         Row(
@@ -36,10 +54,9 @@ class Board extends StatelessWidget {
             ),
             const SizedBox(width: kPadding),
             Column(
-              crossAxisAlignment:
-                  isOpponent
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.end,
+              crossAxisAlignment: isOpponent
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
               children: [
                 const CharacterArea(),
                 const SizedBox(height: kPadding),
@@ -62,22 +79,21 @@ class Board extends StatelessWidget {
         const SizedBox(height: kPadding),
         Row(
           mainAxisSize: MainAxisSize.min,
-          children:
-              isOpponent
-                  ? [
-                    const TrashArea(),
-                    const SizedBox(width: kPadding),
-                    const CostArea(),
-                    const SizedBox(width: kPadding),
-                    const DonArea(),
-                  ]
-                  : [
-                    const DonArea(),
-                    const SizedBox(width: kPadding),
-                    const CostArea(),
-                    const SizedBox(width: kPadding),
-                    const TrashArea(),
-                  ],
+          children: isOpponent
+              ? [
+                  const TrashArea(),
+                  const SizedBox(width: kPadding),
+                  const CostArea(),
+                  const SizedBox(width: kPadding),
+                  const DonArea(),
+                ]
+              : [
+                  const DonArea(),
+                  const SizedBox(width: kPadding),
+                  const CostArea(),
+                  const SizedBox(width: kPadding),
+                  const TrashArea(),
+                ],
         ),
         const SizedBox(height: kPadding),
         const HandArea(),
