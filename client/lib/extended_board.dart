@@ -17,95 +17,101 @@ class ExtendedBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: BlocBuilder<GameController, GameState>(
-      builder: (context, state) => Stack(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: RepositoryProvider.value(
-                      value: state.opponent,
-                      child: Board(
-                        isOpponent: true,
-                        isTurnPlayer: state.currentPlayer == state.opponent,
+      builder: (context, state) => MouseRegion(
+        cursor: switch (state.isAttacking) {
+          true => SystemMouseCursors.precise,
+          false => SystemMouseCursors.basic,
+        },
+        child: Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Expanded(
+                      child: RepositoryProvider.value(
+                        value: state.opponent,
+                        child: Board(
+                          isOpponent: true,
+                          isTurnPlayer: state.currentPlayer == state.opponent,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: RepositoryProvider.value(
-                      value: state.me,
-                      child: Board(
-                        isOpponent: false,
-                        isTurnPlayer: state.currentPlayer == state.me,
+                    Expanded(
+                      child: RepositoryProvider.value(
+                        value: state.me,
+                        child: Board(
+                          isOpponent: false,
+                          isTurnPlayer: state.currentPlayer == state.me,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 20),
-              IconButton(
-                icon: const Icon(Icons.done_sharp),
-                onPressed: () {
-                  context.read<GameController>().passTurn();
-                },
-              ),
-              const SizedBox(width: 20),
-              Text(
-                'Turn: ${state.turn}',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
-              ),
-              const SizedBox(width: 20),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  BlocBuilder<CardHighlightController, GameCard?>(
-                    builder: (context, highlightedCard) {
-                      if (highlightedCard == null) {
-                        return const SizedBox(
+                const SizedBox(width: 20),
+                IconButton(
+                  icon: const Icon(Icons.done_sharp),
+                  onPressed: () {
+                    context.read<GameController>().passTurn();
+                  },
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Turn: ${state.turn}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocBuilder<CardHighlightController, GameCard?>(
+                      builder: (context, highlightedCard) {
+                        if (highlightedCard == null) {
+                          return const SizedBox(
+                            width: kCardWidth * 4,
+                            height: kCardHeight * 4,
+                            child: Center(child: Text('No card selected')),
+                          );
+                        }
+
+                        return SizedBox(
                           width: kCardWidth * 4,
                           height: kCardHeight * 4,
-                          child: Center(child: Text('No card selected')),
+                          child: HighlightedCardView(card: highlightedCard),
                         );
-                      }
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    BlocBuilder<CardOptionsController, CardOptionsState>(
+                      builder: (context, state) {
+                        final GameCard? card = state.selectedCard;
 
-                      return SizedBox(
-                        width: kCardWidth * 4,
-                        height: kCardHeight * 4,
-                        child: HighlightedCardView(card: highlightedCard),
-                      );
-                    },
+                        return switch (card) {
+                          GameCard() => CardOptionsView(card: card),
+                          _ => const SizedBox.shrink(),
+                        };
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (state.winner != null)
+              Center(
+                child: Text(
+                  '${state.winner!.name} wins!',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 20),
-                  BlocBuilder<CardOptionsController, CardOptionsState>(
-                    builder: (context, state) {
-                      final GameCard? card = state.selectedCard;
-
-                      return switch (card) {
-                        GameCard() => CardOptionsView(card: card),
-                        _ => const SizedBox.shrink(),
-                      };
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (state.winner != null)
-            Center(
-              child: Text(
-                '${state.winner!.name} wins!',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     ),
   );

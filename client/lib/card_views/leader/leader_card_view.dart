@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:client/card_views/card_highlight_controller.dart';
 import 'package:client/card_views/card_options/card_options_controller.dart';
+import 'package:client/game_controller.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
@@ -16,6 +17,10 @@ class LeaderCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
+      if (context.read<GameController>().state.isAttacking) {
+        context.read<GameController>().chooseAttackTarget(leader);
+      }
+
       context.read<CardOptionsController>().selectCard(
         leader,
         CardLocation.leaderArea,
@@ -47,10 +52,19 @@ class LeaderCardView extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: Text(
-            leader.name,
-            style: const TextStyle(color: Colors.black),
-            textAlign: TextAlign.center,
+          child: Column(
+            children: [
+              Text(
+                leader.power.toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 24),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                leader.name,
+                style: const TextStyle(color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),

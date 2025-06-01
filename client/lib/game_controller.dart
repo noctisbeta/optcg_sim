@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/game_state.dart';
 import 'package:client/game_state/player.dart';
@@ -6,19 +8,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 final class GameController extends Cubit<GameState> {
   GameController() : super(GameState.empty());
 
+  Completer<GameCard?>? _attackCompleter;
+
   @override
   void emit(GameState state) {
     super.emit(state);
 
     if (state.me.deckCards.isEmpty) {
-      emit(state.copyWith(winner: state.opponent));
+      emit(state.copyWith(winnerFn: () => state.opponent));
     } else if (state.opponent.deckCards.isEmpty) {
-      emit(state.copyWith(winner: state.me));
+      emit(state.copyWith(winnerFn: () => state.me));
     }
   }
 
-  void attackWithLeader() {
+  void cancelAttack() {
+    _attackCompleter?.complete(null);
+    _attackCompleter = null;
+  }
+
+  void chooseAttackTarget(GameCard? card) {
+    if (_attackCompleter == null) {
+      return;
+    }
+
+    if (card == null) {
+      _attackCompleter?.complete(null);
+      _attackCompleter = null;
+      return;
+    }
+
+    _attackCompleter?.complete(card);
+  }
+
+  Future<void> attackWithLeader() async {
     if (state.currentPlayer != state.me) {
+      return;
+    }
+
+    if (!state.me.leaderCard.isActive) {
+      return;
+    }
+
+    final GameState attackingState = state.copyWith(
+      isAttacking: true,
+    );
+
+    emit(attackingState);
+
+    _attackCompleter = Completer<GameCard?>();
+
+    final GameCard? card = await _attackCompleter?.future;
+
+    if (card == null) {
+      emit(state.copyWith(isAttacking: false));
       return;
     }
 
@@ -28,7 +70,7 @@ final class GameController extends Cubit<GameState> {
       ),
     );
 
-    emit(state.copyWith(me: newMe));
+    emit(state.copyWith(me: newMe, isAttacking: false));
   }
 
   void startGame(Player me, Player opponent) {

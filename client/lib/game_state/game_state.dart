@@ -8,13 +8,15 @@ final class GameState {
     required this.opponent,
     required this.turn,
     required this.winner,
+    required this.isAttacking,
   });
 
   GameState.empty()
     : me = Player.empty(),
       opponent = Player.empty2(),
       turn = 1,
-      winner = null;
+      winner = null,
+      isAttacking = false;
 
   static const int maxDonCards = 10;
 
@@ -22,6 +24,7 @@ final class GameState {
   final Player opponent;
   final int turn;
   final Player? winner;
+  final bool isAttacking;
 
   Player get currentPlayer => turn.isOdd ? me : opponent;
 
@@ -29,11 +32,13 @@ final class GameState {
     Player? me,
     Player? opponent,
     int? turn,
-    Player? winner,
+    Player? Function()? winnerFn,
+    bool? isAttacking,
   }) => GameState(
     me: me ?? this.me,
     opponent: opponent ?? this.opponent,
     turn: turn ?? this.turn,
-    winner: winner ?? this.winner,
+    winner: winnerFn != null ? winnerFn() : winner,
+    isAttacking: isAttacking ?? this.isAttacking,
   );
 }
