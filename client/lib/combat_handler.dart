@@ -37,6 +37,10 @@ final class CombatHandler {
   }
 
   Future<void> attack(GameCard card) async {
+    if (state.turn < 3) {
+      return;
+    }
+
     if (state.currentPlayer == state.me) {
       await _meAttackOpponent(card);
     } else {

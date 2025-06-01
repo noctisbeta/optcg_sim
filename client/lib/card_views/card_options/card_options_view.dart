@@ -21,20 +21,21 @@ class CardOptionsView extends StatelessWidget {
           builder: (context, state) => Column(
             children: [
               if (state.cardLocation == CardLocation.characterArea) ...[
-                ElevatedButton(
-                  onPressed: () async {
-                    void afterAttack() {
-                      context.read<CardOptionsController>().clearSelection();
-                    }
+                if (gameState.turn > 2)
+                  ElevatedButton(
+                    onPressed: () async {
+                      void afterAttack() {
+                        context.read<CardOptionsController>().clearSelection();
+                      }
 
-                    await context.read<SingleplayerGameController>().attack(
-                      card as CharacterCard,
-                    );
+                      await context.read<SingleplayerGameController>().attack(
+                        card as CharacterCard,
+                      );
 
-                    afterAttack();
-                  },
-                  child: const Text('Attack'),
-                ),
+                      afterAttack();
+                    },
+                    child: const Text('Attack'),
+                  ),
                 if (gameState.isAttacking)
                   ElevatedButton(
                     onPressed: () {
@@ -55,20 +56,21 @@ class CardOptionsView extends StatelessWidget {
                   child: const Text('Deploy'),
                 ),
               if (state.cardLocation == CardLocation.leaderArea) ...[
-                ElevatedButton(
-                  onPressed: () async {
-                    void afterAttack() {
-                      context.read<CardOptionsController>().clearSelection();
-                    }
+                if (gameState.turn > 2)
+                  ElevatedButton(
+                    onPressed: () async {
+                      void afterAttack() {
+                        context.read<CardOptionsController>().clearSelection();
+                      }
 
-                    await context.read<SingleplayerGameController>().attack(
-                      card,
-                    );
+                      await context.read<SingleplayerGameController>().attack(
+                        card,
+                      );
 
-                    afterAttack();
-                  },
-                  child: const Text('Attack'),
-                ),
+                      afterAttack();
+                    },
+                    child: const Text('Attack'),
+                  ),
                 if (gameState.isAttacking)
                   ElevatedButton(
                     onPressed: () {
