@@ -5,6 +5,7 @@ import 'package:client/card_views/card_options/card_options_controller.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
+import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class LeaderCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
-      if (context.read<SingleplayerGameController>().state.isAttacking) {
+      if (context.read<SingleplayerGameController>().state.combatState ==
+          CombatState.attacking) {
         context.read<SingleplayerGameController>().chooseAttackTarget(leader);
       }
 

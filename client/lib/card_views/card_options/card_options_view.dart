@@ -2,6 +2,7 @@ import 'package:client/card_views/card_options/card_options_controller.dart';
 import 'package:client/card_views/card_options/card_options_state.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
+import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
 import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart' hide Card;
@@ -20,8 +21,19 @@ class CardOptionsView extends StatelessWidget {
         BlocBuilder<CardOptionsController, CardOptionsState>(
           builder: (context, state) => Column(
             children: [
+              if (gameState.combatState == CombatState.countering) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<SingleplayerGameController>().resolveCounter();
+
+                    context.read<CardOptionsController>().clearSelection();
+                  },
+                  child: const Text('Resolve Counter'),
+                ),
+              ],
               if (state.cardLocation == CardLocation.characterArea) ...[
-                if (gameState.turn > 2)
+                if (gameState.turn > 2 &&
+                    gameState.combatState == CombatState.none)
                   ElevatedButton(
                     onPressed: () async {
                       void afterAttack() {
@@ -36,7 +48,7 @@ class CardOptionsView extends StatelessWidget {
                     },
                     child: const Text('Attack'),
                   ),
-                if (gameState.isAttacking)
+                if (gameState.combatState == CombatState.attacking)
                   ElevatedButton(
                     onPressed: () {
                       context.read<SingleplayerGameController>().cancelAttack();
@@ -56,7 +68,9 @@ class CardOptionsView extends StatelessWidget {
                   child: const Text('Deploy'),
                 ),
               if (state.cardLocation == CardLocation.leaderArea) ...[
-                if (gameState.turn > 2)
+                if (gameState.turn > 2 &&
+                    gameState.combatState == CombatState.none &&
+                    (card as LeaderCard).isActive)
                   ElevatedButton(
                     onPressed: () async {
                       void afterAttack() {
@@ -71,7 +85,7 @@ class CardOptionsView extends StatelessWidget {
                     },
                     child: const Text('Attack'),
                   ),
-                if (gameState.isAttacking)
+                if (gameState.combatState == CombatState.attacking)
                   ElevatedButton(
                     onPressed: () {
                       context.read<SingleplayerGameController>().cancelAttack();

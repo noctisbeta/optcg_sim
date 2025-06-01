@@ -6,6 +6,7 @@ import 'package:client/card_views/card_options/card_options_view.dart';
 import 'package:client/card_views/highlighted_card_view.dart';
 import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
 import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart' hide Card;
@@ -22,9 +23,10 @@ class ExtendedBoard extends StatelessWidget {
     child: Center(
       child: BlocBuilder<SingleplayerGameController, GameState>(
         builder: (context, state) => MouseRegion(
-          cursor: switch (state.isAttacking) {
-            true => SystemMouseCursors.precise,
-            false => SystemMouseCursors.basic,
+          cursor: switch (state.combatState) {
+            CombatState.attacking => SystemMouseCursors.precise,
+            CombatState.countering => SystemMouseCursors.click,
+            _ => SystemMouseCursors.basic,
           },
           child: Stack(
             children: [

@@ -19,7 +19,7 @@ class CharacterCard extends DeckCard {
 
   final int power;
   final List<CardAttribute> attributes;
-  final int? counter;
+  final int counter;
   final bool isFrozen;
   final bool isActive;
 

@@ -3,6 +3,7 @@ import 'package:client/card_views/card_options/card_options_controller.dart';
 import 'package:client/card_views/character_card_view.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
+import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,25 @@ class HandCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
+      if (context.read<SingleplayerGameController>().state.combatState ==
+              CombatState.countering &&
+          (context.read<SingleplayerGameController>().state.currentPlayer !=
+              context.read<Player>())) {
+        context.read<SingleplayerGameController>().counter(
+          card,
+          context.read<Player>(),
+        );
+      }
+
       if (context.read<SingleplayerGameController>().state.currentPlayer !=
           context.read<Player>()) {
+        return;
+      }
+
+      if (context.read<SingleplayerGameController>().state.combatState !=
+              CombatState.none &&
+          context.read<SingleplayerGameController>().state.currentPlayer ==
+              context.read<Player>()) {
         return;
       }
 

@@ -48,6 +48,12 @@ class CharacterCardView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+
+          Text(
+            'C${card.counter}',
+            style: const TextStyle(color: Colors.white, fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     ),

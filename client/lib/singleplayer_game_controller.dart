@@ -38,6 +38,14 @@ final class SingleplayerGameController extends Cubit<GameState> {
 
   Future<void> attack(GameCard card) => _combatHandler.attack(card);
 
+  void counter(DeckCard card, Player player) {
+    _combatHandler.counter(card, player);
+  }
+
+  void resolveCounter() {
+    _combatHandler.resolveCounter();
+  }
+
   void startGame() {
     final myDeckCards = List<DeckCard>.from(state.me.deckCards)..shuffle();
 
