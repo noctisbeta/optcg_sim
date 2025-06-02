@@ -19,6 +19,13 @@ class CharacterAreaCardView extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     behavior: HitTestBehavior.translucent,
     onTap: () {
+      if (context.read<SingleplayerGameController>().state.isAttachingDon) {
+        context.read<SingleplayerGameController>().attachDonCardToCharacter(
+          card,
+        );
+        return;
+      }
+
       if (context.read<SingleplayerGameController>().state.currentPlayer !=
           context.read<Player>()) {
         return;
@@ -29,18 +36,39 @@ class CharacterAreaCardView extends StatelessWidget {
         CardLocation.characterArea,
       );
     },
-    child: MouseRegion(
-      onEnter: (_) =>
-          context.read<CardHighlightController>().highlightCard(card),
-      onExit: (_) => context.read<CardHighlightController>().clearHighlight(),
-      child: switch (card) {
-        CharacterCard() => Transform.rotate(
-          angle: card.isActive ? 0 : -pi / 2,
-          child: CharacterCardView(
-            card: card,
-          ),
+    child: Stack(
+      children: [
+        MouseRegion(
+          onEnter: (_) =>
+              context.read<CardHighlightController>().highlightCard(card),
+          onExit: (_) =>
+              context.read<CardHighlightController>().clearHighlight(),
+          child: switch (card) {
+            CharacterCard() => Transform.rotate(
+              angle: card.isActive ? 0 : -pi / 2,
+              child: CharacterCardView(
+                card: card,
+              ),
+            ),
+          },
         ),
-      },
+        if (card.attachedDonCards.isNotEmpty)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${card.attachedDonCards.length}',
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ),
+          ),
+      ],
     ),
   );
 }
