@@ -37,8 +37,6 @@ class CardOptionsView extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     context.read<SingleplayerGameController>().resolveCounter();
-
-                    context.read<CardOptionsController>().clearSelection();
                   },
                   child: const Text('Resolve Counter'),
                 ),

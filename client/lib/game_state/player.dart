@@ -2,9 +2,8 @@ import 'package:client/card_implementations/op10/op10_005.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
-import 'package:equatable/equatable.dart';
 
-final class Player extends Equatable {
+final class Player {
   const Player({
     required this.name,
     required this.lifeCards,
@@ -26,7 +25,7 @@ final class Player extends Equatable {
       isOpponent = false,
       leaderCard = const LeaderCard(
         id: 1,
-        power: 5000,
+        basePower: 5000,
         attribute: CardAttribute.slash,
         colors: [CardColor.blue, CardColor.red],
         name: 'Default Leader',
@@ -53,7 +52,7 @@ final class Player extends Equatable {
               color: CardColor.red,
               cardNumber: 'asd',
               blockNumber: 2,
-              power: 4000,
+              basePower: 4000,
               attributes: [CardAttribute.ranged],
               isFrozen: false,
               isActive: false,
@@ -73,7 +72,7 @@ final class Player extends Equatable {
       isOpponent = true,
       leaderCard = const LeaderCard(
         id: 1,
-        power: 5000,
+        basePower: 5000,
         attribute: CardAttribute.slash,
         colors: [CardColor.blue, CardColor.red],
         name: 'Default Leader',
@@ -123,17 +122,4 @@ final class Player extends Equatable {
     handCards: handCards ?? this.handCards,
     isOpponent: isOpponent ?? this.isOpponent,
   );
-
-  @override
-  List<Object?> get props => [
-    name,
-    lifeCards,
-    donCards,
-    stageCard,
-    leaderCard,
-    deckCards,
-    trashCards,
-    characterCards,
-    handCards,
-  ];
 }

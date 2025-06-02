@@ -8,6 +8,7 @@ import 'package:client/constants.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/player.dart';
 import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,10 @@ class ExtendedBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
+      if (context.read<SingleplayerGameController>().state.combatState !=
+          CombatState.none) {
+        return;
+      }
       context.read<CardOptionsController>().clearSelection();
     },
     child: Center(
@@ -36,7 +41,7 @@ class ExtendedBoard extends StatelessWidget {
                   Column(
                     children: [
                       Expanded(
-                        child: RepositoryProvider.value(
+                        child: RepositoryProvider<Player>.value(
                           value: state.opponent,
                           child: Board(
                             isOpponent: true,
@@ -45,7 +50,7 @@ class ExtendedBoard extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: RepositoryProvider.value(
+                        child: RepositoryProvider<Player>.value(
                           value: state.me,
                           child: Board(
                             isOpponent: false,

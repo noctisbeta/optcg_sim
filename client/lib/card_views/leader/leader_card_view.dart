@@ -73,7 +73,19 @@ class LeaderCardView extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    leader.power.toString(),
+                    leader
+                        .getEffectivePower(
+                          counterAmount: context
+                              .watch<SingleplayerGameController>()
+                              .counterAmount,
+                          isOnTurn:
+                              context
+                                  .watch<SingleplayerGameController>()
+                                  .state
+                                  .currentPlayer ==
+                              context.watch<Player>(),
+                        )
+                        .toString(),
                     style: const TextStyle(color: Colors.white, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),

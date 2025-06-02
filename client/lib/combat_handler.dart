@@ -15,6 +15,7 @@ final class CombatHandler {
   Completer<GameCard?>? _attackCompleter;
   Completer<int?>? _counterCompleter;
   int _counterAmount = 0;
+  int get counterAmount => _counterAmount;
 
   final void Function(GameState state) _emit;
   final GameState Function() _getState;
@@ -152,7 +153,15 @@ final class CombatHandler {
 
         switch (targetCard) {
           case CharacterCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<CharacterCard> newCharacterCards = [
                 for (final character in state.me.characterCards)
                   if (character != targetCard) character,
@@ -166,7 +175,15 @@ final class CombatHandler {
             }
 
           case LeaderCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<DeckCard> meLifeCards = List.from(
                 state.me.lifeCards,
               );
@@ -214,7 +231,15 @@ final class CombatHandler {
 
         switch (targetCard) {
           case CharacterCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<CharacterCard> newCharacterCards = [
                 for (final character in state.opponent.characterCards)
                   if (character != targetCard) character,
@@ -233,7 +258,15 @@ final class CombatHandler {
             }
 
           case LeaderCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<DeckCard> meLifeCards = List.from(
                 state.me.lifeCards,
               );
@@ -303,7 +336,15 @@ final class CombatHandler {
 
         switch (targetCard) {
           case CharacterCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<CharacterCard> newCharacterCards = [
                 for (final character in state.opponent.characterCards)
                   if (character != targetCard) character,
@@ -322,7 +363,15 @@ final class CombatHandler {
             }
 
           case LeaderCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<DeckCard> opponentLifeCards = List.from(
                 state.opponent.lifeCards,
               );
@@ -372,7 +421,15 @@ final class CombatHandler {
 
         switch (targetCard) {
           case CharacterCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<CharacterCard> newCharacterCards = [
                 for (final character in state.opponent.characterCards)
                   if (character != targetCard) character,
@@ -391,7 +448,15 @@ final class CombatHandler {
             }
 
           case LeaderCard():
-            if (attackingCard.power >= targetCard.power + counterAmount) {
+            if (attackingCard.getEffectivePower(
+                  isOnTurn: true,
+                  counterAmount: 0,
+                ) >=
+                targetCard.getEffectivePower(
+                      isOnTurn: false,
+                      counterAmount: 0,
+                    ) +
+                    counterAmount) {
               final List<DeckCard> opponentLifeCards = List.from(
                 state.opponent.lifeCards,
               );

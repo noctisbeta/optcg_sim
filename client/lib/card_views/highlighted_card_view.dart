@@ -1,5 +1,5 @@
-import 'package:client/card_views/character_card_view.dart';
-import 'package:client/card_views/leader/leader_card_view.dart';
+import 'package:client/card_views/highlight/highlighted_character_card_view.dart';
+import 'package:client/card_views/highlight/highlighted_leader_card_view.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:flutter/material.dart' hide Card;
 
@@ -10,10 +10,10 @@ class HighlightedCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => switch (card) {
-    CharacterCard() => CharacterCardView(
+    CharacterCard() => HighlightedCharacterCardView(
       card: card as CharacterCard,
     ),
-    LeaderCard() => LeaderCardView(
+    LeaderCard() => HighlightedLeaderCardView(
       leader: card as LeaderCard,
     ),
     _ => const SizedBox.shrink(),

@@ -16,7 +16,7 @@ final class OP10_005 extends CharacterCard {
         color: CardColor.red,
         cardNumber: 'OP10-005',
         blockNumber: 3,
-        power: 3000,
+        basePower: 3000,
         attributes: const [CardAttribute.special],
         isFrozen: false,
         isActive: true,

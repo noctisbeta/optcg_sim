@@ -1,6 +1,8 @@
 import 'package:client/card_views/card_highlight_controller.dart';
 import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
+import 'package:client/game_state/player.dart';
+import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +38,19 @@ class CharacterCardView extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                card.power.toString(),
+                card
+                    .getEffectivePower(
+                      counterAmount: context
+                          .read<SingleplayerGameController>()
+                          .counterAmount,
+                      isOnTurn:
+                          context
+                              .read<SingleplayerGameController>()
+                              .state
+                              .currentPlayer ==
+                          context.read<Player>(),
+                    )
+                    .toString(),
                 style: const TextStyle(color: Colors.white),
               ),
             ],
