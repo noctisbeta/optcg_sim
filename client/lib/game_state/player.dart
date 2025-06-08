@@ -36,30 +36,15 @@ final class Player {
         isFrozen: false,
         attachedDonCards: [],
       ),
-      deckCards =
-          List.generate(
-            20,
-            (i) => OP10_005(
-              id: i,
-            ),
-          )..insert(
-            1,
-            const CharacterCard(
-              id: 2,
-              name: 'Kekec',
-              type: 'Warrior',
-              cost: 2,
-              color: CardColor.red,
-              cardNumber: 'asd',
-              blockNumber: 2,
-              basePower: 4000,
-              attributes: [CardAttribute.ranged],
-              isFrozen: false,
-              isActive: false,
-              counter: 2000,
-              attachedDonCards: [],
-            ),
-          ),
+      deckCards = List.generate(
+        20,
+        (i) => OP10_005(
+          id: i,
+          isActive: true,
+          isFrozen: false,
+          attachedDonCards: const [],
+        ),
+      ),
       trashCards = const [],
       characterCards = const [],
       handCards = const [];
@@ -83,7 +68,15 @@ final class Player {
         isFrozen: false,
         attachedDonCards: [],
       ),
-      deckCards = List.generate(20, (i) => OP10_005(id: i)),
+      deckCards = List.generate(
+        20,
+        (i) => OP10_005(
+          id: i,
+          isActive: true,
+          isFrozen: false,
+          attachedDonCards: const [],
+        ),
+      ),
       trashCards = const [],
       characterCards = const [],
       handCards = const [];

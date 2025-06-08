@@ -1,7 +1,7 @@
 part of 'game_card.dart';
 
 @immutable
-class CharacterCard extends DeckCard with DonAttachable {
+abstract class CharacterCard extends DeckCard with DonAttachable {
   const CharacterCard({
     required super.id,
     required super.name,
@@ -26,7 +26,11 @@ class CharacterCard extends DeckCard with DonAttachable {
   @override
   final List<DonCard> attachedDonCards;
 
-  int getEffectivePower({required bool isOnTurn, required int counterAmount}) =>
+  int getEffectivePower({
+    required bool isOnTurn,
+    required int counterAmount,
+    required CardLocation location,
+  }) =>
       basePower +
       (isOnTurn ? 0 : counterAmount) +
       attachedDonCards.fold(0, (sum, don) => sum + (isOnTurn ? 1000 : 0));
@@ -45,19 +49,5 @@ class CharacterCard extends DeckCard with DonAttachable {
     int? counter,
     int? id,
     List<DonCard>? attachedDonCards,
-  }) => CharacterCard(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    cost: cost ?? this.cost,
-    color: color ?? this.color,
-    cardNumber: cardNumber ?? this.cardNumber,
-    blockNumber: blockNumber ?? this.blockNumber,
-    basePower: basePower ?? this.basePower,
-    attributes: attributes ?? this.attributes,
-    isFrozen: isFrozen ?? this.isFrozen,
-    isActive: isActive ?? this.isActive,
-    counter: counter ?? this.counter,
-    attachedDonCards: attachedDonCards ?? this.attachedDonCards,
-  );
+  });
 }

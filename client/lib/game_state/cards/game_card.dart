@@ -1,3 +1,4 @@
+import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:flutter/material.dart' show immutable;

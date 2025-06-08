@@ -51,6 +51,7 @@ class HandCardView extends StatelessWidget {
       child: switch (card) {
         CharacterCard() => CharacterCardView(
           card: card as CharacterCard,
+          location: CardLocation.handArea,
         ),
         _ => const SizedBox.shrink(),
       },

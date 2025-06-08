@@ -4,4 +4,5 @@ enum CardLocation {
   leaderArea,
   stageArea,
   donArea,
+  trashArea,
 }

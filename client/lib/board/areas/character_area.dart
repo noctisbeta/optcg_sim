@@ -40,7 +40,9 @@ class CharacterArea extends StatelessWidget {
             child: SizedBox(
               width: kCardWidth,
               height: kCardHeight,
-              child: CharacterAreaCardView(card: tuple.$2),
+              child: CharacterAreaCardView(
+                card: tuple.$2,
+              ),
             ),
           ),
         ),

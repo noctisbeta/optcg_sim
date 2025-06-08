@@ -1,5 +1,6 @@
 import 'package:client/card_views/card_highlight_controller.dart';
 import 'package:client/game_logic/singleplayer_game_controller.dart';
+import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:client/game_state/player.dart';
@@ -7,9 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CharacterCardView extends StatelessWidget {
-  const CharacterCardView({required this.card, super.key});
+  const CharacterCardView({
+    required this.card,
+    required this.location,
+    super.key,
+  });
 
   final CharacterCard card;
+  final CardLocation location;
 
   @override
   Widget build(BuildContext context) => MouseRegion(
@@ -50,6 +56,7 @@ class CharacterCardView extends StatelessWidget {
                               .state
                               .currentPlayer ==
                           context.read<Player>(),
+                      location: location,
                     )
                     .toString(),
                 style: const TextStyle(color: Colors.white),

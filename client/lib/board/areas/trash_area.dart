@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:client/card_views/card_highlight_controller.dart';
 import 'package:client/card_views/character_card_view.dart';
 import 'package:client/constants.dart';
+import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class TrashArea extends StatelessWidget {
                           height: kCardHeight,
                           child: CharacterCardView(
                             card: card,
+                            location: CardLocation.trashArea,
                           ),
                         ),
                         _ => const SizedBox.shrink(),
@@ -109,6 +111,7 @@ class TrashArea extends StatelessWidget {
                   child: switch (tuple.$2) {
                     CharacterCard() => CharacterCardView(
                       card: tuple.$2 as CharacterCard,
+                      location: CardLocation.trashArea,
                     ),
 
                     _ => const SizedBox.shrink(),
