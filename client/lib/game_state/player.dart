@@ -1,5 +1,5 @@
 import 'package:client/card_implementations/op10/op10_005.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:equatable/equatable.dart';

@@ -1,7 +1,7 @@
 // Card identifier
 // ignore_for_file: camel_case_types
 
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:flutter/material.dart' show immutable;

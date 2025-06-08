@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:client/combat_handler.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_logic/combat_handler.dart';
+import 'package:client/game_logic/refresh_phase_controller.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/game_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,10 +13,17 @@ final class SingleplayerGameController extends Cubit<GameState> {
       emit: emit,
       getState: () => state,
     );
+
+    _refreshPhaseController = RefreshPhaseController(
+      emit: emit,
+      getState: () => state,
+    );
+
     startGame();
   }
 
   late final CombatHandler _combatHandler;
+  late final RefreshPhaseController _refreshPhaseController;
 
   final List<DonCard> _selectedDonCards = [];
 
@@ -305,7 +313,7 @@ final class SingleplayerGameController extends Cubit<GameState> {
   }
 
   void startTurn() {
-    _refreshPhase();
+    _refreshPhaseController.refreshPhase();
     _drawPhase();
     _donPhase();
   }
@@ -372,125 +380,5 @@ final class SingleplayerGameController extends Cubit<GameState> {
       );
       emit(state.copyWith(opponent: newOpponent));
     }
-  }
-
-  void _refreshPhase() {
-    if (state.currentPlayer == state.me) {
-      final Player newMe = state.me.copyWith(
-        donCards: _refreshDonCards(state.me.donCards),
-        characterCards: _refreshCharacterCards(state.me.characterCards),
-        leaderCard: _refreshLeaderCard(state.me.leaderCard),
-        stageCard: state.me.stageCard?.copyWith(
-          isActive: true,
-        ),
-      );
-
-      final LeaderCard leaderWithoutDon = newMe.leaderCard.copyWith(
-        attachedDonCards: [],
-      );
-
-      final List<DonCard> newDonFromLeader = [
-        ...newMe.donCards,
-        ...state.me.leaderCard.attachedDonCards,
-      ];
-
-      final Player newMeWithLeader = newMe.copyWith(
-        leaderCard: leaderWithoutDon,
-        donCards: newDonFromLeader,
-      );
-
-      final newDonCardsFromChars = <DonCard>[
-        ...newMeWithLeader.donCards,
-      ];
-
-      for (final CharacterCard character in state.me.characterCards) {
-        if (character.attachedDonCards.isNotEmpty) {
-          newDonCardsFromChars.addAll(character.attachedDonCards);
-        }
-      }
-      final newCharsWithoutDon = <CharacterCard>[
-        for (final CharacterCard character in newMeWithLeader.characterCards)
-          character.copyWith(attachedDonCards: []),
-      ];
-
-      final Player newMeWithLeaderAndChars = newMeWithLeader.copyWith(
-        donCards: newDonCardsFromChars,
-        characterCards: newCharsWithoutDon,
-      );
-
-      emit(state.copyWith(me: newMeWithLeaderAndChars));
-    } else {
-      final Player newOpponent = state.opponent.copyWith(
-        donCards: _refreshDonCards(state.opponent.donCards),
-        characterCards: _refreshCharacterCards(state.opponent.characterCards),
-        leaderCard: _refreshLeaderCard(state.opponent.leaderCard),
-        stageCard: state.opponent.stageCard?.copyWith(
-          isActive: true,
-        ),
-      );
-
-      final LeaderCard newLeader = newOpponent.leaderCard.copyWith(
-        attachedDonCards: [],
-      );
-
-      final List<DonCard> newDonFromLeader = [
-        ...newOpponent.donCards,
-        ...state.opponent.leaderCard.attachedDonCards,
-      ];
-
-      final Player newOpponentWithLeader = newOpponent.copyWith(
-        leaderCard: newLeader,
-        donCards: newDonFromLeader,
-      );
-
-      final newDonCardsFromChars = <DonCard>[
-        ...newOpponentWithLeader.donCards,
-      ];
-
-      for (final CharacterCard character in state.opponent.characterCards) {
-        if (character.attachedDonCards.isNotEmpty) {
-          newDonCardsFromChars.addAll(character.attachedDonCards);
-        }
-      }
-      final newCharsWithoutDon = <CharacterCard>[
-        for (final CharacterCard character
-            in newOpponentWithLeader.characterCards)
-          character.copyWith(attachedDonCards: []),
-      ];
-
-      final Player newOpponentWithLeaderAndChars = newOpponentWithLeader
-          .copyWith(
-            donCards: newDonCardsFromChars,
-            characterCards: newCharsWithoutDon,
-          );
-
-      emit(state.copyWith(opponent: newOpponentWithLeaderAndChars));
-    }
-  }
-
-  List<DonCard> _refreshDonCards(List<DonCard> donCards) => [
-    for (final DonCard donCard in donCards)
-      if (donCard.isFrozen)
-        donCard.copyWith(isActive: false, isFrozen: false)
-      else
-        donCard.copyWith(isActive: true),
-  ];
-
-  List<CharacterCard> _refreshCharacterCards(
-    List<CharacterCard> characterCards,
-  ) => [
-    for (final CharacterCard characterCard in characterCards)
-      if (characterCard.isFrozen)
-        characterCard.copyWith(isActive: false, isFrozen: false)
-      else
-        characterCard.copyWith(isActive: true),
-  ];
-
-  LeaderCard _refreshLeaderCard(LeaderCard leaderCard) {
-    if (leaderCard.isFrozen) {
-      return leaderCard.copyWith(isActive: false, isFrozen: false);
-    }
-
-    return leaderCard.copyWith(isActive: true);
   }
 }

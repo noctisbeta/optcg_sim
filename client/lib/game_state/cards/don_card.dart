@@ -1,4 +1,4 @@
-part of 'card.dart';
+part of 'game_card.dart';
 
 final class DonCard extends GameCard {
   const DonCard({

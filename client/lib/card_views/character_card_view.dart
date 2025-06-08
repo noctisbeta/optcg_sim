@@ -1,5 +1,5 @@
 import 'package:client/card_views/card_highlight_controller.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

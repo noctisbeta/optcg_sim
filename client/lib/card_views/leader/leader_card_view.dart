@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:client/card_views/card_highlight_controller.dart';
 import 'package:client/card_views/card_options/card_options_controller.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_logic/singleplayer_game_controller.dart';
 import 'package:client/game_state/cards/card_location.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
 import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/player.dart';
-import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

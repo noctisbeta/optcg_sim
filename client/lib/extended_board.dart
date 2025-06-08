@@ -5,10 +5,10 @@ import 'package:client/card_views/card_options/card_options_state.dart';
 import 'package:client/card_views/card_options/card_options_view.dart';
 import 'package:client/card_views/highlighted_card_view.dart';
 import 'package:client/constants.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_logic/singleplayer_game_controller.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
-import 'package:client/singleplayer_game_controller.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_bloc/flutter_bloc.dart';
 

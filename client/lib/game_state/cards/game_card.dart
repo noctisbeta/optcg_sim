@@ -7,6 +7,7 @@ part 'deck_card.dart';
 part 'don_card.dart';
 part 'leader_card.dart';
 part 'stage_card.dart';
+part 'don_attachable.dart';
 
 sealed class GameCard {
   const GameCard({

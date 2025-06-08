@@ -1,4 +1,4 @@
-part of 'card.dart';
+part of 'game_card.dart';
 
 final class StageCard extends DeckCard {
   StageCard({

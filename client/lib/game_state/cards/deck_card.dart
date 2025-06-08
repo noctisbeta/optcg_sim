@@ -1,4 +1,4 @@
-part of 'card.dart';
+part of 'game_card.dart';
 
 sealed class DeckCard extends GameCard {
   const DeckCard({

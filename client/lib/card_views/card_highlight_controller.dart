@@ -1,4 +1,4 @@
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CardHighlightController extends Cubit<GameCard?> {

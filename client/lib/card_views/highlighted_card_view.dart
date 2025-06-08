@@ -1,6 +1,6 @@
 import 'package:client/card_views/character_card_view.dart';
 import 'package:client/card_views/leader/leader_card_view.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:flutter/material.dart' hide Card;
 
 class HighlightedCardView extends StatelessWidget {

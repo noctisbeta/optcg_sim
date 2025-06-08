@@ -1,5 +1,5 @@
-import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:flutter/material.dart' show immutable;
 
 @immutable

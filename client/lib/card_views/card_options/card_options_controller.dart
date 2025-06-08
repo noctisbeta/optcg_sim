@@ -1,6 +1,6 @@
 import 'package:client/card_views/card_options/card_options_state.dart';
-import 'package:client/game_state/cards/card.dart';
 import 'package:client/game_state/cards/card_location.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CardOptionsController extends Cubit<CardOptionsState> {

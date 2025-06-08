@@ -1,6 +1,6 @@
 import 'package:client/card_views/character_area_card_view.dart';
 import 'package:client/constants.dart';
-import 'package:client/game_state/cards/card.dart';
+import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

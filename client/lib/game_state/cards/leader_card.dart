@@ -1,6 +1,6 @@
-part of 'card.dart';
+part of 'game_card.dart';
 
-final class LeaderCard extends GameCard {
+final class LeaderCard extends GameCard with DonAttachable {
   const LeaderCard({
     required super.id,
     required this.power,
@@ -24,6 +24,7 @@ final class LeaderCard extends GameCard {
   final int blockNumber;
   final bool isActive;
   final bool isFrozen;
+  @override
   final List<DonCard> attachedDonCards;
 
   LeaderCard copyWith({

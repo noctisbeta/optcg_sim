@@ -1,7 +1,7 @@
-part of 'card.dart';
+part of 'game_card.dart';
 
 @immutable
-class CharacterCard extends DeckCard {
+class CharacterCard extends DeckCard with DonAttachable {
   const CharacterCard({
     required super.id,
     required super.name,
@@ -23,6 +23,7 @@ class CharacterCard extends DeckCard {
   final int counter;
   final bool isFrozen;
   final bool isActive;
+  @override
   final List<DonCard> attachedDonCards;
 
   CharacterCard copyWith({
