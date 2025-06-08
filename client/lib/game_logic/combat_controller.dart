@@ -99,405 +99,7 @@ final class CombatController {
       return;
     }
 
-    if (state.currentPlayer == state.me) {
-      await _meAttackOpponent(card);
-    } else {
-      await _opponentAttackMe(card);
-    }
-  }
-
-  Future<void> _opponentAttackMe(
-    GameCard attackingCard,
-  ) async {
-    final GameState attackingState = state.copyWith(
-      combatState: CombatState.attacking,
-    );
-
-    emit(attackingState);
-
-    _attackCompleter = Completer<GameCard?>();
-
-    final GameCard? targetCard = await _attackCompleter?.future;
-
-    emit(state.copyWith(combatState: CombatState.countering));
-
-    _counterCompleter = Completer<int?>();
-
-    switch (attackingCard) {
-      case CharacterCard():
-        final List<CharacterCard> newCharacterCards = [
-          for (final character in state.opponent.characterCards)
-            if (character == attackingCard)
-              character.copyWith(isActive: false)
-            else
-              character,
-        ];
-
-        final Player newOpponent = state.opponent.copyWith(
-          characterCards: newCharacterCards,
-        );
-
-        emit(
-          state.copyWith(
-            opponent: newOpponent,
-            combatState: CombatState.countering,
-          ),
-        );
-
-        final int counterAmount = await _counterCompleter?.future ?? 0;
-
-        emit(
-          state.copyWith(
-            combatState: CombatState.none,
-          ),
-        );
-
-        switch (targetCard) {
-          case CharacterCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                  location: CardLocation.characterArea,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                      location: CardLocation.characterArea,
-                    ) +
-                    counterAmount) {
-              final List<CharacterCard> newCharacterCards = [
-                for (final character in state.me.characterCards)
-                  if (character != targetCard) character,
-              ];
-
-              final Player newMe = state.me.copyWith(
-                characterCards: newCharacterCards,
-              );
-
-              emit(state.copyWith(me: newMe, combatState: CombatState.none));
-            }
-
-          case LeaderCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                  location: CardLocation.characterArea,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                    ) +
-                    counterAmount) {
-              final List<DeckCard> meLifeCards = List.from(
-                state.me.lifeCards,
-              );
-
-              final DeckCard takenLife = meLifeCards.removeAt(0);
-
-              final List<DeckCard> newMeHandCards = [
-                ...state.me.handCards,
-                takenLife,
-              ];
-
-              final Player newMe = state.me.copyWith(
-                lifeCards: meLifeCards,
-                handCards: newMeHandCards,
-              );
-
-              emit(state.copyWith(me: newMe, combatState: CombatState.none));
-            }
-
-          default:
-            emit(state.copyWith(combatState: CombatState.none));
-        }
-
-      case LeaderCard():
-        final Player newOpponent = state.opponent.copyWith(
-          leaderCard: state.opponent.leaderCard.copyWith(
-            isActive: false,
-          ),
-        );
-
-        emit(
-          state.copyWith(
-            opponent: newOpponent,
-            combatState: CombatState.countering,
-          ),
-        );
-
-        final int counterAmount = await _counterCompleter?.future ?? 0;
-
-        emit(
-          state.copyWith(
-            combatState: CombatState.none,
-          ),
-        );
-
-        switch (targetCard) {
-          case CharacterCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                      location: CardLocation.characterArea,
-                    ) +
-                    counterAmount) {
-              final List<CharacterCard> newCharacterCards = [
-                for (final character in state.opponent.characterCards)
-                  if (character != targetCard) character,
-              ];
-
-              final Player newOpponent = state.opponent.copyWith(
-                characterCards: newCharacterCards,
-              );
-
-              emit(
-                state.copyWith(
-                  opponent: newOpponent,
-                  combatState: CombatState.none,
-                ),
-              );
-            }
-
-          case LeaderCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                    ) +
-                    counterAmount) {
-              final List<DeckCard> meLifeCards = List.from(
-                state.me.lifeCards,
-              );
-
-              final DeckCard takenLife = meLifeCards.removeAt(0);
-
-              final List<DeckCard> newMeHandCards = [
-                ...state.me.handCards,
-                takenLife,
-              ];
-
-              final Player newMe = state.me.copyWith(
-                lifeCards: meLifeCards,
-                handCards: newMeHandCards,
-              );
-
-              emit(state.copyWith(me: newMe, combatState: CombatState.none));
-            }
-          default:
-            emit(state.copyWith(combatState: CombatState.none));
-        }
-
-      default:
-        emit(state.copyWith(combatState: CombatState.none));
-        return;
-    }
-  }
-
-  Future<void> _meAttackOpponent(GameCard attackingCard) async {
-    final GameState attackingState = state.copyWith(
-      combatState: CombatState.attacking,
-    );
-
-    emit(attackingState);
-
-    _attackCompleter = Completer<GameCard?>();
-
-    final GameCard? targetCard = await _attackCompleter?.future;
-
-    emit(state.copyWith(combatState: CombatState.countering));
-
-    _counterCompleter = Completer<int?>();
-
-    switch (attackingCard) {
-      case CharacterCard():
-        final List<CharacterCard> newCharacterCards = [
-          for (final character in state.me.characterCards)
-            if (character == attackingCard)
-              character.copyWith(isActive: false)
-            else
-              character,
-        ];
-
-        final Player newMe = state.me.copyWith(
-          characterCards: newCharacterCards,
-        );
-
-        emit(state.copyWith(me: newMe, combatState: CombatState.countering));
-
-        final int counterAmount = await _counterCompleter?.future ?? 0;
-
-        emit(
-          state.copyWith(
-            combatState: CombatState.none,
-          ),
-        );
-
-        switch (targetCard) {
-          case CharacterCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                  location: CardLocation.characterArea,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                      location: CardLocation.characterArea,
-                    ) +
-                    counterAmount) {
-              final List<CharacterCard> newCharacterCards = [
-                for (final character in state.opponent.characterCards)
-                  if (character != targetCard) character,
-              ];
-
-              final Player newOpponent = state.opponent.copyWith(
-                characterCards: newCharacterCards,
-              );
-
-              emit(
-                state.copyWith(
-                  opponent: newOpponent,
-                  combatState: CombatState.none,
-                ),
-              );
-            }
-
-          case LeaderCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                  location: CardLocation.characterArea,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                    ) +
-                    counterAmount) {
-              final List<DeckCard> opponentLifeCards = List.from(
-                state.opponent.lifeCards,
-              );
-
-              final DeckCard takenLife = opponentLifeCards.removeAt(0);
-
-              final List<DeckCard> newOpponentHandCards = [
-                ...state.opponent.handCards,
-                takenLife,
-              ];
-
-              final Player newOpponent = state.opponent.copyWith(
-                lifeCards: opponentLifeCards,
-                handCards: newOpponentHandCards,
-              );
-
-              emit(
-                state.copyWith(
-                  opponent: newOpponent,
-                  combatState: CombatState.none,
-                ),
-              );
-            }
-
-          default:
-            emit(state.copyWith(combatState: CombatState.none));
-        }
-
-      case LeaderCard():
-        final Player newMe = state.me.copyWith(
-          leaderCard: state.me.leaderCard.copyWith(
-            isActive: false,
-          ),
-        );
-
-        emit(
-          state.copyWith(me: newMe, combatState: CombatState.countering),
-        );
-
-        final int counterAmount = await _counterCompleter?.future ?? 0;
-
-        emit(
-          state.copyWith(
-            combatState: CombatState.none,
-          ),
-        );
-
-        switch (targetCard) {
-          case CharacterCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                      location: CardLocation.characterArea,
-                    ) +
-                    counterAmount) {
-              final List<CharacterCard> newCharacterCards = [
-                for (final character in state.opponent.characterCards)
-                  if (character != targetCard) character,
-              ];
-
-              final Player newOpponent = state.opponent.copyWith(
-                characterCards: newCharacterCards,
-              );
-
-              emit(
-                state.copyWith(
-                  opponent: newOpponent,
-                  combatState: CombatState.none,
-                ),
-              );
-            }
-
-          case LeaderCard():
-            if (attackingCard.getEffectivePower(
-                  isOnTurn: true,
-                  counterAmount: 0,
-                ) >=
-                targetCard.getEffectivePower(
-                      isOnTurn: false,
-                      counterAmount: 0,
-                    ) +
-                    counterAmount) {
-              final List<DeckCard> opponentLifeCards = List.from(
-                state.opponent.lifeCards,
-              );
-
-              final DeckCard takenLife = opponentLifeCards.removeAt(0);
-
-              final List<DeckCard> newOpponentHandCards = [
-                ...state.opponent.handCards,
-                takenLife,
-              ];
-
-              final Player newOpponent = state.opponent.copyWith(
-                lifeCards: opponentLifeCards,
-                handCards: newOpponentHandCards,
-              );
-
-              emit(
-                state.copyWith(
-                  opponent: newOpponent,
-                  combatState: CombatState.none,
-                ),
-              );
-            }
-
-          default:
-            emit(state.copyWith(combatState: CombatState.none));
-        }
-
-      default:
-        emit(state.copyWith(combatState: CombatState.none));
-        return;
-    }
+    await _generalAttack(card);
   }
 
   Future<void> _generalAttack(GameCard attackingCard) async {
@@ -505,6 +107,13 @@ final class CombatController {
       combatState: CombatState.attacking,
     );
 
+    final Player attackingPlayer = state.currentPlayer;
+    final Player defendingPlayer = attackingPlayer == state.me
+        ? state.opponent
+        : state.me;
+
+    final bool isMeAttacking = attackingPlayer == state.me;
+
     emit(attackingState);
 
     _attackCompleter = Completer<GameCard?>();
@@ -514,12 +123,6 @@ final class CombatController {
     emit(state.copyWith(combatState: CombatState.countering));
 
     _counterCompleter = Completer<int?>();
-
-    final Player attackingPlayer = state.currentPlayer;
-
-    final Player defendingPlayer = attackingPlayer == state.me
-        ? state.opponent
-        : state.me;
 
     switch (attackingCard) {
       case CharacterCard():
@@ -537,7 +140,8 @@ final class CombatController {
 
         emit(
           state.copyWith(
-            me: newAttackingPlayer,
+            me: isMeAttacking ? newAttackingPlayer : state.me,
+            opponent: state.opponent,
             combatState: CombatState.countering,
           ),
         );
@@ -563,18 +167,24 @@ final class CombatController {
                       location: CardLocation.characterArea,
                     ) +
                     counterAmount) {
+              final List<DeckCard> newDefendingPlayerTrashCards = [
+                ...defendingPlayer.trashCards,
+                targetCard,
+              ];
+
               final List<CharacterCard> newCharacterCards = [
-                for (final character in state.opponent.characterCards)
+                for (final character in defendingPlayer.characterCards)
                   if (character != targetCard) character,
               ];
 
-              final Player newOpponent = state.opponent.copyWith(
+              final Player newDefendingPlayer = defendingPlayer.copyWith(
                 characterCards: newCharacterCards,
+                trashCards: newDefendingPlayerTrashCards,
               );
 
               emit(
                 state.copyWith(
-                  opponent: newOpponent,
+                  opponent: newDefendingPlayer,
                   combatState: CombatState.none,
                 ),
               );
@@ -591,25 +201,28 @@ final class CombatController {
                       counterAmount: 0,
                     ) +
                     counterAmount) {
-              final List<DeckCard> opponentLifeCards = List.from(
-                state.opponent.lifeCards,
+              final List<DeckCard> defendingPlayerLifeCards = List.from(
+                defendingPlayer.lifeCards,
               );
 
-              final DeckCard takenLife = opponentLifeCards.removeAt(0);
+              final DeckCard takenLife = defendingPlayerLifeCards.removeAt(0);
 
-              final List<DeckCard> newOpponentHandCards = [
-                ...state.opponent.handCards,
+              final List<DeckCard> newDefendingPlayerHandCards = [
+                ...defendingPlayer.handCards,
                 takenLife,
               ];
 
-              final Player newOpponent = state.opponent.copyWith(
-                lifeCards: opponentLifeCards,
-                handCards: newOpponentHandCards,
+              final Player newDefendingPlayer = defendingPlayer.copyWith(
+                lifeCards: defendingPlayerLifeCards,
+                handCards: newDefendingPlayerHandCards,
               );
 
               emit(
                 state.copyWith(
-                  opponent: newOpponent,
+                  me: isMeAttacking ? newAttackingPlayer : newDefendingPlayer,
+                  opponent: isMeAttacking
+                      ? newDefendingPlayer
+                      : newAttackingPlayer,
                   combatState: CombatState.none,
                 ),
               );
@@ -620,14 +233,18 @@ final class CombatController {
         }
 
       case LeaderCard():
-        final Player newMe = state.me.copyWith(
-          leaderCard: state.me.leaderCard.copyWith(
+        final Player newAttackingPlayer = attackingPlayer.copyWith(
+          leaderCard: attackingPlayer.leaderCard.copyWith(
             isActive: false,
           ),
         );
 
         emit(
-          state.copyWith(me: newMe, combatState: CombatState.countering),
+          state.copyWith(
+            me: isMeAttacking ? newAttackingPlayer : state.me,
+            opponent: isMeAttacking ? state.opponent : newAttackingPlayer,
+            combatState: CombatState.countering,
+          ),
         );
 
         final int counterAmount = await _counterCompleter?.future ?? 0;
@@ -650,18 +267,27 @@ final class CombatController {
                       location: CardLocation.characterArea,
                     ) +
                     counterAmount) {
+              final List<DeckCard> newDefendingPlayerTrashCards = [
+                ...defendingPlayer.trashCards,
+                targetCard,
+              ];
+
               final List<CharacterCard> newCharacterCards = [
-                for (final character in state.opponent.characterCards)
+                for (final character in defendingPlayer.characterCards)
                   if (character != targetCard) character,
               ];
 
-              final Player newOpponent = state.opponent.copyWith(
+              final Player newDefendingPlayer = defendingPlayer.copyWith(
                 characterCards: newCharacterCards,
+                trashCards: newDefendingPlayerTrashCards,
               );
 
               emit(
                 state.copyWith(
-                  opponent: newOpponent,
+                  me: isMeAttacking ? newAttackingPlayer : newDefendingPlayer,
+                  opponent: isMeAttacking
+                      ? newDefendingPlayer
+                      : newAttackingPlayer,
                   combatState: CombatState.none,
                 ),
               );
@@ -677,25 +303,28 @@ final class CombatController {
                       counterAmount: 0,
                     ) +
                     counterAmount) {
-              final List<DeckCard> opponentLifeCards = List.from(
-                state.opponent.lifeCards,
+              final List<DeckCard> defendingPlayerLifeCards = List.from(
+                defendingPlayer.lifeCards,
               );
 
-              final DeckCard takenLife = opponentLifeCards.removeAt(0);
+              final DeckCard takenLife = defendingPlayerLifeCards.removeAt(0);
 
-              final List<DeckCard> newOpponentHandCards = [
-                ...state.opponent.handCards,
+              final List<DeckCard> newDefendingPlayerHandCards = [
+                ...defendingPlayer.handCards,
                 takenLife,
               ];
 
-              final Player newOpponent = state.opponent.copyWith(
-                lifeCards: opponentLifeCards,
-                handCards: newOpponentHandCards,
+              final Player newDefendingPlayer = defendingPlayer.copyWith(
+                lifeCards: defendingPlayerLifeCards,
+                handCards: newDefendingPlayerHandCards,
               );
 
               emit(
                 state.copyWith(
-                  opponent: newOpponent,
+                  me: isMeAttacking ? newAttackingPlayer : newDefendingPlayer,
+                  opponent: isMeAttacking
+                      ? newDefendingPlayer
+                      : newAttackingPlayer,
                   combatState: CombatState.none,
                 ),
               );

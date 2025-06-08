@@ -29,51 +29,62 @@ class TrashArea extends StatelessWidget {
           showDialog(
             context: context,
             barrierColor: Colors.transparent,
-            builder: (BuildContext dialogContext) => AlertDialog(
-              title: const Text('Trash'),
-              content: SizedBox(
-                width: 200,
-                height: 300,
-                child: GridView.builder(
-                  itemCount: cards.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Adjust as needed
-                    childAspectRatio: kCardAspectRatio,
-                    crossAxisSpacing: kPadding,
-                    mainAxisSpacing: kPadding,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    final DeckCard card = cards[index];
-                    return MouseRegion(
-                      onEnter: (_) => context
-                          .read<CardHighlightController>()
-                          .highlightCard(card),
-                      onExit: (_) => context
-                          .read<CardHighlightController>()
-                          .clearHighlight(),
-                      child: switch (card) {
-                        CharacterCard() => SizedBox(
-                          width: kCardWidth,
-                          height: kCardHeight,
-                          child: CharacterCardView(
-                            card: card,
-                            location: CardLocation.trashArea,
-                          ),
-                        ),
-                        _ => const SizedBox.shrink(),
-                      },
-                    );
-                  },
-                ),
+            builder: (BuildContext dialogContext) => RepositoryProvider.value(
+              value: context.watch<Player>(),
+              child: Builder(
+                builder: (context) {
+                  final List<DeckCard> cards = context
+                      .watch<Player>()
+                      .trashCards;
+                  return AlertDialog(
+                    title: const Text('Trash'),
+                    content: SizedBox(
+                      width: 200,
+                      height: 300,
+                      child: GridView.builder(
+                        itemCount: cards.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, // Adjust as needed
+                              childAspectRatio: kCardAspectRatio,
+                              crossAxisSpacing: kPadding,
+                              mainAxisSpacing: kPadding,
+                            ),
+                        itemBuilder: (BuildContext context, int index) {
+                          final DeckCard card = cards[index];
+                          return MouseRegion(
+                            onEnter: (_) => context
+                                .read<CardHighlightController>()
+                                .highlightCard(card),
+                            onExit: (_) => context
+                                .read<CardHighlightController>()
+                                .clearHighlight(),
+                            child: switch (card) {
+                              CharacterCard() => SizedBox(
+                                width: kCardWidth,
+                                height: kCardHeight,
+                                child: CharacterCardView(
+                                  card: card,
+                                  location: CardLocation.trashArea,
+                                ),
+                              ),
+                              _ => const SizedBox.shrink(),
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Close'),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Close'),
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop();
-                  },
-                ),
-              ],
             ),
           ),
         );
