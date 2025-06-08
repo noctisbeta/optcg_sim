@@ -20,9 +20,12 @@ class LeaderCardView extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
       if (context.read<SingleplayerGameController>().state.isAttachingDon) {
-        context.read<SingleplayerGameController>().attachDonCardToLeader(
-          leader,
-        );
+        context
+            .read<SingleplayerGameController>()
+            .donAttachController
+            .attachDonCard(
+              leader,
+            );
         return;
       }
 

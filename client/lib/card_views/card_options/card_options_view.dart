@@ -26,6 +26,7 @@ class CardOptionsView extends StatelessWidget {
                   onPressed: () {
                     context
                         .read<SingleplayerGameController>()
+                        .donAttachController
                         .cancelDonSelection();
                     context.read<CardOptionsController>().clearSelection();
                   },

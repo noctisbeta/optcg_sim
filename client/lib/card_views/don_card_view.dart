@@ -19,7 +19,10 @@ class DonCardView extends StatelessWidget {
         CardLocation.donArea,
       );
 
-      context.read<SingleplayerGameController>().selectDonCard(card);
+      context
+          .read<SingleplayerGameController>()
+          .donAttachController
+          .selectDonCard(card);
     },
     child: DecoratedBox(
       decoration: BoxDecoration(

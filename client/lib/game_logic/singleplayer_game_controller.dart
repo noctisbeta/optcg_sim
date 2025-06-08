@@ -1,4 +1,5 @@
 import 'package:client/game_logic/combat_controller.dart';
+import 'package:client/game_logic/don_attach_controller.dart';
 import 'package:client/game_logic/don_phase_controller.dart';
 import 'package:client/game_logic/draw_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
@@ -29,6 +30,11 @@ final class SingleplayerGameController extends Cubit<GameState> {
       getState: () => state,
     );
 
+    donAttachController = DonAttachController(
+      emit: emit,
+      getState: () => state,
+    );
+
     startGame();
   }
 
@@ -36,8 +42,7 @@ final class SingleplayerGameController extends Cubit<GameState> {
   late final RefreshPhaseController _refreshPhaseController;
   late final DrawPhaseController _drawPhaseController;
   late final DonPhaseController _donPhaseController;
-
-  final List<DonCard> _selectedDonCards = [];
+  late final DonAttachController donAttachController;
 
   @override
   void emit(GameState state) {
@@ -48,127 +53,6 @@ final class SingleplayerGameController extends Cubit<GameState> {
     } else if (state.opponent.deckCards.isEmpty) {
       emit(state.copyWith(winnerFn: () => state.me));
     }
-  }
-
-  void attachDonCardToCharacter(
-    CharacterCard characterCard,
-  ) {
-    if (_selectedDonCards.isEmpty) {
-      return;
-    }
-
-    final CharacterCard newCharacter = characterCard.copyWith(
-      attachedDonCards: [
-        ...characterCard.attachedDonCards,
-        ..._selectedDonCards,
-      ],
-    );
-
-    final List<DonCard> newDonCards = List.from(
-      state.currentPlayer.donCards,
-    );
-
-    for (final DonCard donCard in _selectedDonCards) {
-      if (newDonCards.contains(donCard)) {
-        newDonCards.remove(donCard);
-      }
-    }
-
-    final Player newPlayer = state.currentPlayer.copyWith(
-      donCards: newDonCards,
-      characterCards: [
-        for (final CharacterCard char in state.currentPlayer.characterCards)
-          if (char != characterCard) char else newCharacter,
-      ],
-    );
-
-    emit(
-      state.copyWith(
-        me: state.currentPlayer == state.me ? newPlayer : state.me,
-        opponent: state.currentPlayer == state.opponent
-            ? newPlayer
-            : state.opponent,
-        isAttachingDon: false,
-      ),
-    );
-
-    cancelDonSelection();
-  }
-
-  void attachDonCardToLeader(LeaderCard leaderCard) {
-    if (_selectedDonCards.isEmpty) {
-      return;
-    }
-
-    final LeaderCard newLeader = state.currentPlayer.leaderCard.copyWith(
-      attachedDonCards: [
-        ...state.currentPlayer.leaderCard.attachedDonCards,
-        ..._selectedDonCards,
-      ],
-    );
-
-    final List<DonCard> newDonCards = List.from(
-      state.currentPlayer.donCards,
-    );
-
-    for (final DonCard donCard in _selectedDonCards) {
-      if (newDonCards.contains(donCard)) {
-        newDonCards.remove(donCard);
-      }
-    }
-
-    final Player newPlayer = state.currentPlayer.copyWith(
-      donCards: newDonCards,
-      leaderCard: newLeader,
-    );
-
-    emit(
-      state.copyWith(
-        me: state.currentPlayer == state.me ? newPlayer : state.me,
-        opponent: state.currentPlayer == state.opponent
-            ? newPlayer
-            : state.opponent,
-        isAttachingDon: false,
-      ),
-    );
-
-    cancelDonSelection();
-  }
-
-  void selectDonCard(DonCard donCard) {
-    if (_selectedDonCards.contains(donCard)) {
-      _deselectDonCard(donCard);
-    }
-
-    _selectedDonCards.add(donCard);
-
-    emit(
-      state.copyWith(
-        isAttachingDon: true,
-      ),
-    );
-  }
-
-  void _deselectDonCard(DonCard donCard) {
-    _selectedDonCards.remove(donCard);
-
-    if (_selectedDonCards.isEmpty) {
-      emit(
-        state.copyWith(
-          isAttachingDon: false,
-        ),
-      );
-    }
-  }
-
-  void cancelDonSelection() {
-    _selectedDonCards.clear();
-
-    emit(
-      state.copyWith(
-        isAttachingDon: false,
-      ),
-    );
   }
 
   void startGame() {

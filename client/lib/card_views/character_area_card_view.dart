@@ -20,9 +20,12 @@ class CharacterAreaCardView extends StatelessWidget {
     behavior: HitTestBehavior.translucent,
     onTap: () {
       if (context.read<SingleplayerGameController>().state.isAttachingDon) {
-        context.read<SingleplayerGameController>().attachDonCardToCharacter(
-          card,
-        );
+        context
+            .read<SingleplayerGameController>()
+            .donAttachController
+            .attachDonCard(
+              card,
+            );
         return;
       }
 
