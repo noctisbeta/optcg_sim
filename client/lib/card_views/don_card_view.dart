@@ -22,7 +22,7 @@ class DonCardView extends StatelessWidget {
       context
           .read<SingleplayerGameController>()
           .donAttachController
-          .selectDonCard(card);
+          .toggleDonCardSelection(card);
     },
     child: DecoratedBox(
       decoration: BoxDecoration(

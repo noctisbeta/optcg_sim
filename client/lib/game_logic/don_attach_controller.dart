@@ -20,6 +20,9 @@ final class DonAttachController {
     _emit(state);
   }
 
+  bool isDonCardSelected(DonCard donCard) =>
+      _selectedDonCards.contains(donCard);
+
   void attachDonCard(DonAttachable card) {
     if (_selectedDonCards.isEmpty) {
       return;
@@ -87,30 +90,18 @@ final class DonAttachController {
     cancelDonSelection();
   }
 
-  void selectDonCard(DonCard donCard) {
+  void toggleDonCardSelection(DonCard donCard) {
     if (_selectedDonCards.contains(donCard)) {
-      deselectDonCard(donCard);
+      _selectedDonCards.remove(donCard);
+    } else {
+      _selectedDonCards.add(donCard);
     }
-
-    _selectedDonCards.add(donCard);
 
     emit(
       state.copyWith(
-        isAttachingDon: true,
+        isAttachingDon: _selectedDonCards.isNotEmpty,
       ),
     );
-  }
-
-  void deselectDonCard(DonCard donCard) {
-    _selectedDonCards.remove(donCard);
-
-    if (_selectedDonCards.isEmpty) {
-      emit(
-        state.copyWith(
-          isAttachingDon: false,
-        ),
-      );
-    }
   }
 
   void cancelDonSelection() {

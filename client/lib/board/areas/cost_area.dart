@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:client/card_views/don_card_view.dart';
 import 'package:client/constants.dart';
+import 'package:client/game_logic/singleplayer_game_controller.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,25 @@ class CostArea extends StatelessWidget {
               top: 0,
               child: Transform.rotate(
                 angle: entry.value.isActive ? 0 : -pi / 2,
-                child: SizedBox(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color:
+                          context
+                              .watch<SingleplayerGameController>()
+                              .donAttachController
+                              .isDonCardSelected(entry.value)
+                          ? Colors.red
+                          : Colors.transparent,
+                      width:
+                          context
+                              .watch<SingleplayerGameController>()
+                              .donAttachController
+                              .isDonCardSelected(entry.value)
+                          ? 2
+                          : 0,
+                    ),
+                  ),
                   width: kCardWidth,
                   height: kCardHeight,
                   child: DonCardView(

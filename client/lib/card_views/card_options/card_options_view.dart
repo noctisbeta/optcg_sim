@@ -21,7 +21,8 @@ class CardOptionsView extends StatelessWidget {
         BlocBuilder<CardOptionsController, CardOptionsState>(
           builder: (context, state) => Column(
             children: [
-              if (state.cardLocation == CardLocation.donArea) ...[
+              if (gameState.isAttachingDon &&
+                  state.cardLocation == CardLocation.donArea) ...[
                 ElevatedButton(
                   onPressed: () {
                     context
