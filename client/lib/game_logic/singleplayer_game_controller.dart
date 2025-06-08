@@ -27,6 +27,8 @@ final class SingleplayerGameController extends Cubit<GameState> {
 
   final List<DonCard> _selectedDonCards = [];
 
+  int get counterAmount => _combatHandler.counterAmount;
+
   @override
   void emit(GameState state) {
     super.emit(state);

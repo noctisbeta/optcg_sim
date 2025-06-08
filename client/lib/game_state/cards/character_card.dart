@@ -10,7 +10,7 @@ class CharacterCard extends DeckCard with DonAttachable {
     required super.color,
     required super.cardNumber,
     required super.blockNumber,
-    required this.power,
+    required this.basePower,
     required this.attributes,
     required this.isFrozen,
     required this.isActive,
@@ -18,13 +18,18 @@ class CharacterCard extends DeckCard with DonAttachable {
     required this.attachedDonCards,
   });
 
-  final int power;
+  final int basePower;
   final List<CardAttribute> attributes;
   final int counter;
   final bool isFrozen;
   final bool isActive;
   @override
   final List<DonCard> attachedDonCards;
+
+  int getEffectivePower({required bool isOnTurn, required int counterAmount}) =>
+      basePower +
+      (isOnTurn ? 0 : counterAmount) +
+      attachedDonCards.fold(0, (sum, don) => sum + (isOnTurn ? 1000 : 0));
 
   CharacterCard copyWith({
     String? name,
@@ -33,7 +38,7 @@ class CharacterCard extends DeckCard with DonAttachable {
     CardColor? color,
     String? cardNumber,
     int? blockNumber,
-    int? power,
+    int? basePower,
     List<CardAttribute>? attributes,
     bool? isFrozen,
     bool? isActive,
@@ -48,7 +53,7 @@ class CharacterCard extends DeckCard with DonAttachable {
     color: color ?? this.color,
     cardNumber: cardNumber ?? this.cardNumber,
     blockNumber: blockNumber ?? this.blockNumber,
-    power: power ?? this.power,
+    basePower: basePower ?? this.basePower,
     attributes: attributes ?? this.attributes,
     isFrozen: isFrozen ?? this.isFrozen,
     isActive: isActive ?? this.isActive,

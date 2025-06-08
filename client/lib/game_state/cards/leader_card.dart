@@ -3,7 +3,7 @@ part of 'game_card.dart';
 final class LeaderCard extends GameCard with DonAttachable {
   const LeaderCard({
     required super.id,
-    required this.power,
+    required this.basePower,
     required this.attribute,
     required this.colors,
     required this.name,
@@ -15,7 +15,7 @@ final class LeaderCard extends GameCard with DonAttachable {
     required this.attachedDonCards,
   });
 
-  final int power;
+  final int basePower;
   final CardAttribute attribute;
   final List<CardColor> colors;
   final String name;
@@ -27,8 +27,13 @@ final class LeaderCard extends GameCard with DonAttachable {
   @override
   final List<DonCard> attachedDonCards;
 
+  int getEffectivePower({required bool isOnTurn, required int counterAmount}) =>
+      basePower +
+      (isOnTurn ? 0 : counterAmount) +
+      attachedDonCards.fold(0, (sum, don) => sum + (isOnTurn ? 1000 : 0));
+
   LeaderCard copyWith({
-    int? power,
+    int? basePower,
     CardAttribute? attribute,
     List<CardColor>? colors,
     String? name,
@@ -41,7 +46,7 @@ final class LeaderCard extends GameCard with DonAttachable {
     List<DonCard>? attachedDonCards,
   }) => LeaderCard(
     id: id ?? this.id,
-    power: power ?? this.power,
+    basePower: basePower ?? this.basePower,
     attribute: attribute ?? this.attribute,
     colors: colors ?? this.colors,
     name: name ?? this.name,
