@@ -5,10 +5,12 @@ import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
+import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart' show immutable;
 
 @immutable
-final class OP10_005 extends CharacterCard {
+final class OP10_005 extends CharacterCard with EffectOnKO {
   const OP10_005({
     required super.id,
     required super.isActive,
@@ -61,4 +63,38 @@ final class OP10_005 extends CharacterCard {
     isFrozen: isFrozen ?? this.isFrozen,
     attachedDonCards: attachedDonCards ?? this.attachedDonCards,
   );
+
+  @override
+  void onKO(
+    GameState state,
+    void Function(GameState state) emit,
+    Player owner,
+  ) {
+    if (owner == state.me) {
+      final DeckCard? drawnCard = state.me.deckCards.firstOrNull;
+      final List<DeckCard> newDeckCards = state.me.deckCards.skip(1).toList();
+
+      emit(
+        state.copyWith(
+          me: state.me.copyWith(
+            handCards: [...state.me.handCards, ?drawnCard],
+            deckCards: newDeckCards,
+          ),
+        ),
+      );
+    } else {
+      final DeckCard? drawnCard = state.opponent.deckCards.firstOrNull;
+      final List<DeckCard> newDeckCards = state.opponent.deckCards
+          .skip(1)
+          .toList();
+      emit(
+        state.copyWith(
+          opponent: state.opponent.copyWith(
+            handCards: [...state.opponent.handCards, ?drawnCard],
+            deckCards: newDeckCards,
+          ),
+        ),
+      );
+    }
+  }
 }

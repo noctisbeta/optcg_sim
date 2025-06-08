@@ -188,6 +188,14 @@ final class CombatController {
                   combatState: CombatState.none,
                 ),
               );
+
+              if (targetCard is EffectOnKO) {
+                targetCard.onKO(
+                  state,
+                  emit,
+                  isMeAttacking ? state.opponent : state.me,
+                );
+              }
             }
 
           case LeaderCard():
@@ -291,6 +299,14 @@ final class CombatController {
                   combatState: CombatState.none,
                 ),
               );
+
+              if (targetCard is EffectOnKO) {
+                targetCard.onKO(
+                  state,
+                  emit,
+                  isMeAttacking ? state.opponent : state.me,
+                );
+              }
             }
 
           case LeaderCard():
