@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:client/game_logic/combat_handler.dart';
+import 'package:client/game_logic/draw_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/game_state.dart';
@@ -19,11 +20,17 @@ final class SingleplayerGameController extends Cubit<GameState> {
       getState: () => state,
     );
 
+    _drawPhaseController = DrawPhaseController(
+      emit: emit,
+      getState: () => state,
+    );
+
     startGame();
   }
 
   late final CombatHandler _combatHandler;
   late final RefreshPhaseController _refreshPhaseController;
+  late final DrawPhaseController _drawPhaseController;
 
   final List<DonCard> _selectedDonCards = [];
 
@@ -316,7 +323,7 @@ final class SingleplayerGameController extends Cubit<GameState> {
 
   void startTurn() {
     _refreshPhaseController.refreshPhase();
-    _drawPhase();
+    _drawPhaseController.drawPhase();
     _donPhase();
   }
 
@@ -357,28 +364,6 @@ final class SingleplayerGameController extends Cubit<GameState> {
               isFrozen: false,
             ),
         ],
-      );
-      emit(state.copyWith(opponent: newOpponent));
-    }
-  }
-
-  void _drawPhase() {
-    if (state.currentPlayer == state.me) {
-      final Player newMe = state.me.copyWith(
-        handCards: [
-          ...state.me.handCards,
-          state.me.deckCards.first,
-        ],
-        deckCards: state.me.deckCards.skip(1).toList(),
-      );
-      emit(state.copyWith(me: newMe));
-    } else {
-      final Player newOpponent = state.opponent.copyWith(
-        handCards: [
-          ...state.opponent.handCards,
-          state.opponent.deckCards.first,
-        ],
-        deckCards: state.opponent.deckCards.skip(1).toList(),
       );
       emit(state.copyWith(opponent: newOpponent));
     }
