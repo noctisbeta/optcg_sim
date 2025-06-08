@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:client/game_logic/combat_handler.dart';
+import 'package:client/game_logic/don_phase_controller.dart';
 import 'package:client/game_logic/draw_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
 import 'package:client/game_state/cards/game_card.dart';
@@ -25,12 +26,18 @@ final class SingleplayerGameController extends Cubit<GameState> {
       getState: () => state,
     );
 
+    _donPhaseController = DonPhaseController(
+      emit: emit,
+      getState: () => state,
+    );
+
     startGame();
   }
 
   late final CombatHandler _combatHandler;
   late final RefreshPhaseController _refreshPhaseController;
   late final DrawPhaseController _drawPhaseController;
+  late final DonPhaseController _donPhaseController;
 
   final List<DonCard> _selectedDonCards = [];
 
@@ -324,48 +331,6 @@ final class SingleplayerGameController extends Cubit<GameState> {
   void startTurn() {
     _refreshPhaseController.refreshPhase();
     _drawPhaseController.drawPhase();
-    _donPhase();
-  }
-
-  void _donPhase() {
-    if (state.currentPlayer == state.me) {
-      final Player newMe = state.me.copyWith(
-        donCards: [
-          ...state.me.donCards,
-          if (state.me.donCards.length < GameState.maxDonCards)
-            DonCard(
-              id: state.me.donCards.length + 1,
-              isActive: true,
-              isFrozen: false,
-            ),
-          if (state.me.donCards.length + 1 < GameState.maxDonCards)
-            DonCard(
-              id: state.me.donCards.length + 1,
-              isActive: true,
-              isFrozen: false,
-            ),
-        ],
-      );
-      emit(state.copyWith(me: newMe));
-    } else {
-      final Player newOpponent = state.opponent.copyWith(
-        donCards: [
-          ...state.opponent.donCards,
-          if (state.opponent.donCards.length < GameState.maxDonCards)
-            DonCard(
-              id: -state.opponent.donCards.length + 1,
-              isActive: true,
-              isFrozen: false,
-            ),
-          if (state.opponent.donCards.length + 1 < GameState.maxDonCards)
-            DonCard(
-              id: -state.opponent.donCards.length + 1,
-              isActive: true,
-              isFrozen: false,
-            ),
-        ],
-      );
-      emit(state.copyWith(opponent: newOpponent));
-    }
+    _donPhaseController.donPhase();
   }
 }
