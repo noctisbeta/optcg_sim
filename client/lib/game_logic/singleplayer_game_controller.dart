@@ -1,6 +1,4 @@
-import 'dart:async';
-
-import 'package:client/game_logic/combat_handler.dart';
+import 'package:client/game_logic/combat_controller.dart';
 import 'package:client/game_logic/don_phase_controller.dart';
 import 'package:client/game_logic/draw_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
@@ -11,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class SingleplayerGameController extends Cubit<GameState> {
   SingleplayerGameController() : super(GameState.empty()) {
-    _combatHandler = CombatHandler(
+    combatController = CombatController(
       emit: emit,
       getState: () => state,
     );
@@ -34,14 +32,12 @@ final class SingleplayerGameController extends Cubit<GameState> {
     startGame();
   }
 
-  late final CombatHandler _combatHandler;
+  late final CombatController combatController;
   late final RefreshPhaseController _refreshPhaseController;
   late final DrawPhaseController _drawPhaseController;
   late final DonPhaseController _donPhaseController;
 
   final List<DonCard> _selectedDonCards = [];
-
-  int get counterAmount => _combatHandler.counterAmount;
 
   @override
   void emit(GameState state) {
@@ -52,24 +48,6 @@ final class SingleplayerGameController extends Cubit<GameState> {
     } else if (state.opponent.deckCards.isEmpty) {
       emit(state.copyWith(winnerFn: () => state.me));
     }
-  }
-
-  void cancelAttack() {
-    _combatHandler.cancelAttack();
-  }
-
-  void chooseAttackTarget(GameCard? card) {
-    _combatHandler.chooseAttackTarget(card);
-  }
-
-  Future<void> attack(GameCard card) => _combatHandler.attack(card);
-
-  void counter(DeckCard card, Player player) {
-    _combatHandler.counter(card, player);
-  }
-
-  void resolveCounter() {
-    _combatHandler.resolveCounter();
   }
 
   void attachDonCardToCharacter(
@@ -243,79 +221,43 @@ final class SingleplayerGameController extends Cubit<GameState> {
   }
 
   void playCard(DeckCard card) {
+    if (state.currentPlayer.donCards
+            .where((donCard) => donCard.isActive)
+            .length <
+        card.cost) {
+      return;
+    }
+
+    final newDonCards = <DonCard>[];
+
+    int costCopy = card.cost;
+
+    for (final DonCard donCard in state.currentPlayer.donCards) {
+      if (donCard.isActive && costCopy > 0) {
+        newDonCards.add(donCard.copyWith(isActive: false));
+        costCopy--;
+      } else {
+        newDonCards.add(donCard);
+      }
+    }
+
+    final Player newPlayer = state.currentPlayer.copyWith(
+      handCards: [
+        for (final DeckCard handCard in state.currentPlayer.handCards)
+          if (handCard != card) handCard,
+      ],
+      donCards: newDonCards,
+      characterCards: [
+        ...state.currentPlayer.characterCards,
+        card as CharacterCard,
+      ],
+    );
+
     if (state.currentPlayer == state.me) {
-      _playCardMe(card);
+      emit(state.copyWith(me: newPlayer));
     } else {
-      _playCardOpponent(card);
+      emit(state.copyWith(opponent: newPlayer));
     }
-  }
-
-  void _playCardOpponent(DeckCard card) {
-    if (state.opponent.donCards.where((donCard) => donCard.isActive).length <
-        card.cost) {
-      return;
-    }
-
-    final newDonCards = <DonCard>[];
-
-    int costCopy = card.cost;
-
-    for (final DonCard donCard in state.opponent.donCards) {
-      if (donCard.isActive && costCopy > 0) {
-        newDonCards.add(donCard.copyWith(isActive: false));
-        costCopy--;
-      } else {
-        newDonCards.add(donCard);
-      }
-    }
-
-    final Player newOpponent = state.opponent.copyWith(
-      handCards: [
-        for (final DeckCard handCard in state.opponent.handCards)
-          if (handCard != card) handCard,
-      ],
-      donCards: newDonCards,
-      characterCards: [
-        ...state.opponent.characterCards,
-        card as CharacterCard,
-      ],
-    );
-
-    emit(state.copyWith(opponent: newOpponent));
-  }
-
-  void _playCardMe(DeckCard card) {
-    if (state.me.donCards.where((donCard) => donCard.isActive).length <
-        card.cost) {
-      return;
-    }
-
-    final newDonCards = <DonCard>[];
-
-    int costCopy = card.cost;
-
-    for (final DonCard donCard in state.me.donCards) {
-      if (donCard.isActive && costCopy > 0) {
-        newDonCards.add(donCard.copyWith(isActive: false));
-        costCopy--;
-      } else {
-        newDonCards.add(donCard);
-      }
-    }
-
-    final Player newMe = state.me.copyWith(
-      handCards: [
-        for (final DeckCard handCard in state.me.handCards)
-          if (handCard != card) handCard,
-      ],
-      donCards: newDonCards,
-      characterCards: [
-        ...state.me.characterCards,
-        card as CharacterCard,
-      ],
-    );
-
-    emit(state.copyWith(me: newMe));
   }
 
   void passTurn() {

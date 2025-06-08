@@ -5,8 +5,8 @@ import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
 import 'package:client/game_state/player.dart';
 
-final class CombatHandler {
-  CombatHandler({
+final class CombatController {
+  CombatController({
     required void Function(GameState state) emit,
     required GameState Function() getState,
   }) : _emit = emit,

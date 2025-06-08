@@ -21,7 +21,7 @@ class HandCardView extends StatelessWidget {
               CombatState.countering &&
           (context.read<SingleplayerGameController>().state.currentPlayer !=
               context.read<Player>())) {
-        context.read<SingleplayerGameController>().counter(
+        context.read<SingleplayerGameController>().combatController.counter(
           card,
           context.read<Player>(),
         );

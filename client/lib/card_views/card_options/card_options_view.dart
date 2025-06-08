@@ -36,7 +36,10 @@ class CardOptionsView extends StatelessWidget {
               if (gameState.combatState == CombatState.countering) ...[
                 ElevatedButton(
                   onPressed: () {
-                    context.read<SingleplayerGameController>().resolveCounter();
+                    context
+                        .read<SingleplayerGameController>()
+                        .combatController
+                        .resolveCounter();
                   },
                   child: const Text('Resolve Counter'),
                 ),
@@ -50,9 +53,12 @@ class CardOptionsView extends StatelessWidget {
                         context.read<CardOptionsController>().clearSelection();
                       }
 
-                      await context.read<SingleplayerGameController>().attack(
-                        card as CharacterCard,
-                      );
+                      await context
+                          .read<SingleplayerGameController>()
+                          .combatController
+                          .attack(
+                            card as CharacterCard,
+                          );
 
                       afterAttack();
                     },
@@ -61,7 +67,10 @@ class CardOptionsView extends StatelessWidget {
                 if (gameState.combatState == CombatState.attacking)
                   ElevatedButton(
                     onPressed: () {
-                      context.read<SingleplayerGameController>().cancelAttack();
+                      context
+                          .read<SingleplayerGameController>()
+                          .combatController
+                          .cancelAttack();
                     },
                     child: const Text('Cancel Attack'),
                   ),
@@ -87,9 +96,12 @@ class CardOptionsView extends StatelessWidget {
                         context.read<CardOptionsController>().clearSelection();
                       }
 
-                      await context.read<SingleplayerGameController>().attack(
-                        card,
-                      );
+                      await context
+                          .read<SingleplayerGameController>()
+                          .combatController
+                          .attack(
+                            card,
+                          );
 
                       afterAttack();
                     },
@@ -98,7 +110,10 @@ class CardOptionsView extends StatelessWidget {
                 if (gameState.combatState == CombatState.attacking)
                   ElevatedButton(
                     onPressed: () {
-                      context.read<SingleplayerGameController>().cancelAttack();
+                      context
+                          .read<SingleplayerGameController>()
+                          .combatController
+                          .cancelAttack();
                     },
                     child: const Text('Cancel Attack'),
                   ),

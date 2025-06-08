@@ -28,7 +28,10 @@ class LeaderCardView extends StatelessWidget {
 
       if (context.read<SingleplayerGameController>().state.combatState ==
           CombatState.attacking) {
-        context.read<SingleplayerGameController>().chooseAttackTarget(leader);
+        context
+            .read<SingleplayerGameController>()
+            .combatController
+            .chooseAttackTarget(leader);
       }
 
       if (context.read<SingleplayerGameController>().state.currentPlayer !=
@@ -77,6 +80,7 @@ class LeaderCardView extends StatelessWidget {
                         .getEffectivePower(
                           counterAmount: context
                               .watch<SingleplayerGameController>()
+                              .combatController
                               .counterAmount,
                           isOnTurn:
                               context

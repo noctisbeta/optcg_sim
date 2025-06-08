@@ -42,6 +42,7 @@ class CharacterCardView extends StatelessWidget {
                     .getEffectivePower(
                       counterAmount: context
                           .read<SingleplayerGameController>()
+                          .combatController
                           .counterAmount,
                       isOnTurn:
                           context
