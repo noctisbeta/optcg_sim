@@ -13,32 +13,44 @@ final class CombatController {
   }) : _emit = emit,
        _getState = getState;
 
-  Completer<GameCard?>? _attackCompleter;
+  Completer<GameCard?>? _targetCompleter;
   Completer<int?>? _counterCompleter;
   int _counterAmount = 0;
-  int get counterAmount => _counterAmount;
+  GameCard? _targetCard;
 
   final void Function(GameState state) _emit;
   final GameState Function() _getState;
 
   GameState get state => _getState();
+
   void emit(GameState state) {
     _emit(state);
   }
 
+  int getCounterAmountFor(GameCard card) {
+    if (_targetCard == null) {
+      return 0;
+    } else if (_targetCard == card) {
+      return _counterAmount;
+    }
+    return 0;
+  }
+
   void cancelAttack() {
-    _attackCompleter?.complete(null);
-    _attackCompleter = null;
+    _targetCompleter?.complete(null);
+    _targetCompleter = null;
+    _targetCard = null;
   }
 
   void chooseAttackTarget(GameCard? card) {
     if (card == null) {
-      _attackCompleter?.complete(null);
-      _attackCompleter = null;
+      _targetCompleter?.complete(null);
+      _targetCompleter = null;
+
       return;
     }
-
-    _attackCompleter?.complete(card);
+    _targetCard = card;
+    _targetCompleter?.complete(card);
   }
 
   void counter(DeckCard card, Player player) {
@@ -116,9 +128,9 @@ final class CombatController {
 
     emit(attackingState);
 
-    _attackCompleter = Completer<GameCard?>();
+    _targetCompleter = Completer<GameCard?>();
 
-    final GameCard? targetCard = await _attackCompleter?.future;
+    final GameCard? targetCard = await _targetCompleter?.future;
 
     emit(state.copyWith(combatState: CombatState.countering));
 

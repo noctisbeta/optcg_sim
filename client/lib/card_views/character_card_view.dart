@@ -49,7 +49,7 @@ class CharacterCardView extends StatelessWidget {
                       counterAmount: context
                           .watch<SingleplayerGameController>()
                           .combatController
-                          .counterAmount,
+                          .getCounterAmountFor(card),
                       isOnTurn:
                           context
                               .watch<SingleplayerGameController>()

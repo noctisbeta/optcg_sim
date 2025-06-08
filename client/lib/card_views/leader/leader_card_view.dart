@@ -84,7 +84,7 @@ class LeaderCardView extends StatelessWidget {
                           counterAmount: context
                               .watch<SingleplayerGameController>()
                               .combatController
-                              .counterAmount,
+                              .getCounterAmountFor(leader),
                           isOnTurn:
                               context
                                   .watch<SingleplayerGameController>()
