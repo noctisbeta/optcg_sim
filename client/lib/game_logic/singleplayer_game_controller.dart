@@ -142,6 +142,10 @@ final class SingleplayerGameController extends Cubit<GameState> {
     } else {
       emit(state.copyWith(opponent: newPlayer));
     }
+
+    if (card is EffectOnPlay) {
+      card.onPlay(state, emit, state.currentPlayer);
+    }
   }
 
   void passTurn() {

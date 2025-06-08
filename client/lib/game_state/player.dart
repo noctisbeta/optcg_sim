@@ -1,4 +1,5 @@
 import 'package:client/card_implementations/op10/op10_005.dart';
+import 'package:client/card_implementations/op10/op10_112.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
@@ -70,7 +71,7 @@ final class Player {
       ),
       deckCards = List.generate(
         20,
-        (i) => OP10_005(
+        (i) => OP10_112(
           id: i,
           isActive: true,
           isFrozen: false,

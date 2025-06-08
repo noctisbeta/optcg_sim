@@ -10,6 +10,7 @@ part 'deck_card.dart';
 part 'don_attachable.dart';
 part 'don_card.dart';
 part 'effect_on_ko.dart';
+part 'effect_on_play.dart';
 part 'leader_card.dart';
 part 'stage_card.dart';
 

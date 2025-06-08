@@ -64,10 +64,12 @@ class CharacterCardView extends StatelessWidget {
             ],
           ),
           Center(
-            child: Text(
-              card.name,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              textAlign: TextAlign.center,
+            child: FittedBox(
+              child: Text(
+                card.name,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
 
