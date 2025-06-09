@@ -4,6 +4,7 @@ import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/combat_state.dart';
 import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 
 final class CombatController {
@@ -117,6 +118,9 @@ final class CombatController {
   Future<void> _generalAttack(GameCard attackingCard) async {
     final GameState attackingState = state.copyWith(
       combatState: CombatState.attacking,
+      interactionState: ISchoosingAttackTarget(
+        interactingPlayer: state.currentPlayer,
+      ),
     );
 
     final Player attackingPlayer = state.currentPlayer;
@@ -132,7 +136,12 @@ final class CombatController {
 
     final GameCard? targetCard = await _targetCompleter?.future;
 
-    emit(state.copyWith(combatState: CombatState.countering));
+    emit(
+      state.copyWith(
+        combatState: CombatState.countering,
+        interactionState: IScountering(interactingPlayer: defendingPlayer),
+      ),
+    );
 
     _counterCompleter = Completer<int?>();
 
@@ -163,6 +172,7 @@ final class CombatController {
         emit(
           state.copyWith(
             combatState: CombatState.none,
+            interactionState: const ISnone(),
           ),
         );
 
@@ -198,6 +208,7 @@ final class CombatController {
                 state.copyWith(
                   opponent: newDefendingPlayer,
                   combatState: CombatState.none,
+                  interactionState: const ISnone(),
                 ),
               );
 
@@ -244,12 +255,18 @@ final class CombatController {
                       ? newDefendingPlayer
                       : newAttackingPlayer,
                   combatState: CombatState.none,
+                  interactionState: const ISnone(),
                 ),
               );
             }
 
           default:
-            emit(state.copyWith(combatState: CombatState.none));
+            emit(
+              state.copyWith(
+                combatState: CombatState.none,
+                interactionState: const ISnone(),
+              ),
+            );
         }
 
       case LeaderCard():
@@ -272,6 +289,7 @@ final class CombatController {
         emit(
           state.copyWith(
             combatState: CombatState.none,
+            interactionState: const ISnone(),
           ),
         );
 
@@ -309,6 +327,7 @@ final class CombatController {
                       ? newDefendingPlayer
                       : newAttackingPlayer,
                   combatState: CombatState.none,
+                  interactionState: const ISnone(),
                 ),
               );
 
@@ -354,16 +373,27 @@ final class CombatController {
                       ? newDefendingPlayer
                       : newAttackingPlayer,
                   combatState: CombatState.none,
+                  interactionState: const ISnone(),
                 ),
               );
             }
 
           default:
-            emit(state.copyWith(combatState: CombatState.none));
+            emit(
+              state.copyWith(
+                combatState: CombatState.none,
+                interactionState: const ISnone(),
+              ),
+            );
         }
 
       default:
-        emit(state.copyWith(combatState: CombatState.none));
+        emit(
+          state.copyWith(
+            combatState: CombatState.none,
+            interactionState: const ISnone(),
+          ),
+        );
         return;
     }
   }

@@ -1,5 +1,6 @@
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 
 final class DonAttachController {
@@ -15,10 +16,6 @@ final class DonAttachController {
   GameState get state => _getState();
 
   final List<DonCard> _selectedDonCards = [];
-
-  void emit(GameState state) {
-    _emit(state);
-  }
 
   bool isDonCardSelected(DonCard donCard) =>
       _selectedDonCards.contains(donCard);
@@ -48,13 +45,14 @@ final class DonAttachController {
         leaderCard: newLeader,
       );
 
-      emit(
+      _emit(
         state.copyWith(
           me: state.currentPlayer == state.me ? newPlayer : state.me,
           opponent: state.currentPlayer == state.opponent
               ? newPlayer
               : state.opponent,
           isAttachingDon: false,
+          interactionState: const ISnone(),
         ),
       );
     } else if (card is CharacterCard) {
@@ -76,7 +74,7 @@ final class DonAttachController {
         characterCards: newCharacterCards,
       );
 
-      emit(
+      _emit(
         state.copyWith(
           me: state.currentPlayer == state.me ? newPlayer : state.me,
           opponent: state.currentPlayer == state.opponent
@@ -97,9 +95,12 @@ final class DonAttachController {
       _selectedDonCards.add(donCard);
     }
 
-    emit(
+    _emit(
       state.copyWith(
         isAttachingDon: _selectedDonCards.isNotEmpty,
+        interactionState: _selectedDonCards.isNotEmpty
+            ? ISattachingDon(interactingPlayer: state.currentPlayer)
+            : const ISnone(),
       ),
     );
   }
@@ -107,9 +108,10 @@ final class DonAttachController {
   void cancelDonSelection() {
     _selectedDonCards.clear();
 
-    emit(
+    _emit(
       state.copyWith(
         isAttachingDon: false,
+        interactionState: const ISnone(),
       ),
     );
   }

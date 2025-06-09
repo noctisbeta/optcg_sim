@@ -101,10 +101,7 @@ class ExtendedBoard extends StatelessWidget {
                         builder: (context, state) {
                           final GameCard? card = state.selectedCard;
 
-                          return switch (card) {
-                            GameCard() => CardOptionsView(card: card),
-                            _ => const SizedBox.shrink(),
-                          };
+                          return CardOptionsView(card: card);
                         },
                       ),
                     ],

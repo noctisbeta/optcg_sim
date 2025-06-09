@@ -6,7 +6,7 @@ import 'package:client/game_logic/singleplayer_game_controller.dart';
 import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_color.dart';
-import 'package:client/game_state/combat_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,33 +19,36 @@ class LeaderCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: () {
-      if (context.read<SingleplayerGameController>().state.isAttachingDon) {
-        context
-            .read<SingleplayerGameController>()
-            .donAttachController
-            .attachDonCard(
-              leader,
-            );
-        return;
+      switch (context
+          .read<SingleplayerGameController>()
+          .state
+          .interactionState) {
+        case ISchoosingAttackTarget():
+          if (context.read<SingleplayerGameController>().state.currentPlayer ==
+              context.read<Player>()) {
+            return;
+          }
+          context
+              .read<SingleplayerGameController>()
+              .combatController
+              .chooseAttackTarget(leader);
+        case ISattachingDon():
+          if (context.read<SingleplayerGameController>().state.currentPlayer !=
+              context.read<Player>()) {
+            return;
+          }
+          context
+              .read<SingleplayerGameController>()
+              .donAttachController
+              .attachDonCard(leader);
+        case IScountering():
+          return;
+        case ISnone():
+          context.read<CardOptionsController>().selectCard(
+            leader,
+            CardLocation.leaderArea,
+          );
       }
-
-      if (context.read<SingleplayerGameController>().state.combatState ==
-          CombatState.attacking) {
-        context
-            .read<SingleplayerGameController>()
-            .combatController
-            .chooseAttackTarget(leader);
-      }
-
-      if (context.read<SingleplayerGameController>().state.currentPlayer !=
-          context.read<Player>()) {
-        return;
-      }
-
-      context.read<CardOptionsController>().selectCard(
-        leader,
-        CardLocation.leaderArea,
-      );
     },
     child: Stack(
       children: [

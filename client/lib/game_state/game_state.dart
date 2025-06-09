@@ -1,4 +1,5 @@
 import 'package:client/game_state/combat_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart' show immutable;
 
@@ -11,6 +12,7 @@ final class GameState {
     required this.winner,
     required this.combatState,
     required this.isAttachingDon,
+    required this.interactionState,
   });
 
   GameState.empty()
@@ -19,7 +21,8 @@ final class GameState {
       turn = 1,
       winner = null,
       combatState = CombatState.none,
-      isAttachingDon = false;
+      isAttachingDon = false,
+      interactionState = const ISnone();
 
   static const int maxDonCards = 10;
 
@@ -29,6 +32,7 @@ final class GameState {
   final Player? winner;
   final CombatState combatState;
   final bool isAttachingDon;
+  final InteractionState interactionState;
 
   Player get currentPlayer => turn.isOdd ? me : opponent;
 
@@ -39,6 +43,7 @@ final class GameState {
     Player? Function()? winnerFn,
     CombatState? combatState,
     bool? isAttachingDon,
+    InteractionState? interactionState,
   }) => GameState(
     me: me ?? this.me,
     opponent: opponent ?? this.opponent,
@@ -46,5 +51,6 @@ final class GameState {
     winner: winnerFn != null ? winnerFn() : winner,
     combatState: combatState ?? this.combatState,
     isAttachingDon: isAttachingDon ?? this.isAttachingDon,
+    interactionState: interactionState ?? this.interactionState,
   );
 }

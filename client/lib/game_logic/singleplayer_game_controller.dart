@@ -10,11 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class SingleplayerGameController extends Cubit<GameState> {
   SingleplayerGameController() : super(GameState.empty()) {
-    combatController = CombatController(
-      emit: emit,
-      getState: () => state,
-    );
-
     _refreshPhaseController = RefreshPhaseController(
       emit: emit,
       getState: () => state,
@@ -26,6 +21,11 @@ final class SingleplayerGameController extends Cubit<GameState> {
     );
 
     _donPhaseController = DonPhaseController(
+      emit: emit,
+      getState: () => state,
+    );
+
+    combatController = CombatController(
       emit: emit,
       getState: () => state,
     );
