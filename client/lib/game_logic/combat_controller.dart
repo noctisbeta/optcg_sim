@@ -56,6 +56,9 @@ final class CombatController {
 
   void counter(DeckCard card, Player player) {
     if (card is CharacterCard) {
+      if (card.counter == 0) {
+        return;
+      }
       _counterAmount = _counterAmount + card.counter;
     }
 
@@ -75,7 +78,12 @@ final class CombatController {
         trashCards: newTrashCards,
       );
 
-      emit(state.copyWith(me: newMe, combatState: CombatState.countering));
+      emit(
+        state.copyWith(
+          me: newMe,
+          combatState: CombatState.countering,
+        ),
+      );
     } else {
       final List<DeckCard> newHandCards = [
         for (final handCard in state.opponent.handCards)
@@ -212,7 +220,7 @@ final class CombatController {
                 ),
               );
 
-              if (targetCard is EffectOnKO) {
+              if (targetCard is OnKO) {
                 targetCard.onKO(
                   state,
                   emit,
@@ -331,7 +339,7 @@ final class CombatController {
                 ),
               );
 
-              if (targetCard is EffectOnKO) {
+              if (targetCard is OnKO) {
                 targetCard.onKO(
                   state,
                   emit,

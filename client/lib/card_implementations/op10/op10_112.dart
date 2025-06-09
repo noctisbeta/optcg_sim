@@ -1,6 +1,9 @@
 // Card identifier
 // ignore_for_file: camel_case_types
 
+import 'dart:async';
+
+import 'package:client/game_logic/effect_controller.dart';
 import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/cards/properties/card_attribute.dart';
@@ -10,7 +13,7 @@ import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart' show immutable;
 
 @immutable
-final class OP10_112 extends CharacterCard with OptionalEffectOnPlay {
+final class OP10_112 extends CharacterCard with OptionalOnPlay, EndOfYourTurn {
   const OP10_112({
     required super.id,
     required super.isActive,
@@ -116,6 +119,51 @@ final class OP10_112 extends CharacterCard with OptionalEffectOnPlay {
           ),
         ),
       );
+    }
+  }
+
+  @override
+  Future<void> endOfYourTurn(
+    GameState state,
+    void Function(GameState state) emit,
+    EffectController effectController,
+    Player owner,
+  ) async {
+    final Player opposingPlayer = owner == state.me ? state.opponent : state.me;
+
+    if (opposingPlayer.lifeCards.length > 2) {
+      return;
+    }
+
+    final DeckCard? drawnCard = owner.deckCards.firstOrNull;
+    final List<DeckCard> newDeckCards = owner.deckCards.skip(1).toList();
+    final List<DeckCard> newHandCards = [
+      ...owner.handCards,
+      ?drawnCard,
+    ];
+
+    if (owner == state.me) {
+      emit(
+        state.copyWith(
+          me: owner.copyWith(
+            deckCards: newDeckCards,
+            handCards: newHandCards,
+          ),
+        ),
+      );
+
+      await effectController.trashFromHand(state.me, () {});
+    } else {
+      emit(
+        state.copyWith(
+          opponent: owner.copyWith(
+            deckCards: newDeckCards,
+            handCards: newHandCards,
+          ),
+        ),
+      );
+
+      await effectController.trashFromHand(state.opponent, () {});
     }
   }
 }

@@ -10,7 +10,7 @@ import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart' show immutable;
 
 @immutable
-final class OP10_005 extends CharacterCard with EffectOnKO {
+final class OP10_005 extends CharacterCard with OnKO {
   const OP10_005({
     required super.id,
     required super.isActive,

@@ -26,7 +26,9 @@ class DonCardView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch (gameState.interactionState) {
-          case ISconfirming():
+          case ISselectingCardInHand():
+            return;
+          case ISconfirmingAction():
             return;
           case ISchoosingAttackTarget():
             return;

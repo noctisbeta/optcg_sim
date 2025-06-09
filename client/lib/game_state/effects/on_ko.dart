@@ -1,5 +1,5 @@
-part of 'game_card.dart';
+part of '../cards/game_card.dart';
 
-mixin EffectOnKO on CharacterCard {
+mixin OnKO on CharacterCard {
   void onKO(GameState state, void Function(GameState state) emit, Player owner);
 }

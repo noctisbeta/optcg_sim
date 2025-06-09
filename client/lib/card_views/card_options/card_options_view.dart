@@ -37,7 +37,7 @@ class CardOptionsView extends StatelessWidget {
                   'Attaching DON',
                 ),
 
-                ISconfirming() => Column(
+                ISconfirmingAction() => Column(
                   children: [
                     const Text(
                       'Confirming action',
@@ -61,6 +61,7 @@ class CardOptionsView extends StatelessWidget {
                     ),
                   ],
                 ),
+                ISselectingCardInHand() => const Text('Select a card in hand'),
               },
 
               if (gameState.isAttachingDon &&

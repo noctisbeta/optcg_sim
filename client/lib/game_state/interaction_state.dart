@@ -41,8 +41,17 @@ final class ISattachingDon extends InteractionState {
 }
 
 @immutable
-final class ISconfirming extends InteractionState {
-  const ISconfirming({
+final class ISconfirmingAction extends InteractionState {
+  const ISconfirmingAction({
+    required this.interactingPlayer,
+  });
+
+  final Player interactingPlayer;
+}
+
+@immutable
+final class ISselectingCardInHand extends InteractionState {
+  const ISselectingCardInHand({
     required this.interactingPlayer,
   });
 

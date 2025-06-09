@@ -4,6 +4,8 @@ import 'package:client/game_logic/combat_controller.dart';
 import 'package:client/game_logic/don_attach_controller.dart';
 import 'package:client/game_logic/don_phase_controller.dart';
 import 'package:client/game_logic/draw_phase_controller.dart';
+import 'package:client/game_logic/effect_controller.dart';
+import 'package:client/game_logic/end_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/game_state.dart';
@@ -38,6 +40,17 @@ final class SingleplayerGameController extends Cubit<GameState> {
       getState: () => state,
     );
 
+    effectController = EffectController(
+      emit: emit,
+      getState: () => state,
+    );
+
+    endPhaseController = EndPhaseController(
+      emit: emit,
+      getState: () => state,
+      effectController: effectController,
+    );
+
     startGame();
   }
 
@@ -46,6 +59,8 @@ final class SingleplayerGameController extends Cubit<GameState> {
   late final DrawPhaseController _drawPhaseController;
   late final DonPhaseController _donPhaseController;
   late final DonAttachController donAttachController;
+  late final EndPhaseController endPhaseController;
+  late final EffectController effectController;
 
   Completer<bool>? _confirmCompleter;
 
@@ -149,12 +164,12 @@ final class SingleplayerGameController extends Cubit<GameState> {
     }
 
     switch (card) {
-      case EffectOnPlay():
+      case OnPlay():
         card.onPlay(state: state, emit: emit, owner: newPlayer);
-      case OptionalEffectOnPlay():
+      case OptionalOnPlay():
         emit(
           state.copyWith(
-            interactionState: ISconfirming(
+            interactionState: ISconfirmingAction(
               interactingPlayer: state.currentPlayer,
             ),
           ),
@@ -197,7 +212,9 @@ final class SingleplayerGameController extends Cubit<GameState> {
     }
   }
 
-  void passTurn() {
+  Future<void> passTurn() async {
+    await endPhaseController.endPhase();
+
     final GameState newState = state.copyWith(
       turn: state.turn + 1,
     );

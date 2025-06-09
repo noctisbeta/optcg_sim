@@ -29,7 +29,9 @@ class LeaderCardView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch (gameState.interactionState) {
-          case ISconfirming():
+          case ISselectingCardInHand():
+            return;
+          case ISconfirmingAction():
             return;
           case ISchoosingAttackTarget():
             if (gameState.currentPlayer == cardOwner) {

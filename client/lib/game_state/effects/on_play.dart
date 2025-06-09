@@ -1,6 +1,6 @@
-part of 'game_card.dart';
+part of '../cards/game_card.dart';
 
-mixin EffectOnPlay on CharacterCard {
+mixin OnPlay on CharacterCard {
   void onPlay({
     required GameState state,
     required void Function(GameState state) emit,
@@ -8,7 +8,7 @@ mixin EffectOnPlay on CharacterCard {
   });
 }
 
-mixin OptionalEffectOnPlay on CharacterCard {
+mixin OptionalOnPlay on CharacterCard {
   void onPlay({
     required GameState state,
     required void Function(GameState state) emit,

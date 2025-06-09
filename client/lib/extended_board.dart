@@ -63,10 +63,12 @@ class ExtendedBoard extends StatelessWidget {
                   const SizedBox(width: 20),
                   IconButton(
                     icon: const Icon(Icons.done_sharp),
-                    onPressed: () {
-                      context.read<SingleplayerGameController>().passTurn();
+                    onPressed: () async {
                       context.read<CardHighlightController>().clearHighlight();
                       context.read<CardOptionsController>().clearSelection();
+                      await context
+                          .read<SingleplayerGameController>()
+                          .passTurn();
                     },
                   ),
                   const SizedBox(width: 20),

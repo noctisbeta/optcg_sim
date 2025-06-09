@@ -28,7 +28,18 @@ class HandCardView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch (gameState.interactionState) {
-          case ISconfirming():
+          case ISselectingCardInHand():
+            if (gameState.currentPlayer != cardOwner) {
+              return;
+            }
+
+            gameCubit.effectController.selectCardInHand(
+              cardOwner,
+              card,
+            );
+
+            return;
+          case ISconfirmingAction():
             return;
           case ISchoosingAttackTarget():
             return;
