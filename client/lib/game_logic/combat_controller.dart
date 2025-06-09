@@ -162,7 +162,7 @@ final class CombatController {
         emit(
           state.copyWith(
             me: isMeAttacking ? newAttackingPlayer : state.me,
-            opponent: state.opponent,
+            opponent: isMeAttacking ? state.opponent : newAttackingPlayer,
             combatState: CombatState.countering,
           ),
         );

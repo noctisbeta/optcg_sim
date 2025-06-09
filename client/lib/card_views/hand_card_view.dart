@@ -5,6 +5,8 @@ import 'package:client/game_logic/singleplayer_game_controller.dart';
 import 'package:client/game_state/cards/card_location.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/combat_state.dart';
+import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,46 +17,53 @@ class HandCardView extends StatelessWidget {
   final DeckCard card;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: () {
-      if (context.read<SingleplayerGameController>().state.combatState ==
-              CombatState.countering &&
-          (context.read<SingleplayerGameController>().state.currentPlayer !=
-              context.read<Player>())) {
-        context.read<SingleplayerGameController>().combatController.counter(
-          card,
-          context.read<Player>(),
-        );
-      }
+  Widget build(BuildContext context) {
+    final SingleplayerGameController gameCubit = context
+        .watch<SingleplayerGameController>();
 
-      if (context.read<SingleplayerGameController>().state.currentPlayer !=
-          context.read<Player>()) {
-        return;
-      }
+    final GameState gameState = gameCubit.state;
 
-      if (context.read<SingleplayerGameController>().state.combatState !=
-              CombatState.none &&
-          context.read<SingleplayerGameController>().state.currentPlayer ==
-              context.read<Player>()) {
-        return;
-      }
+    final Player cardOwner = context.read<Player>();
 
-      context.read<CardOptionsController>().selectCard(
-        card,
-        CardLocation.handArea,
-      );
-    },
-    child: MouseRegion(
-      onEnter: (_) =>
-          context.read<CardHighlightController>().highlightCard(card),
-      onExit: (_) => context.read<CardHighlightController>().clearHighlight(),
-      child: switch (card) {
-        CharacterCard() => CharacterCardView(
-          card: card as CharacterCard,
-          location: CardLocation.handArea,
-        ),
-        _ => const SizedBox.shrink(),
+    return GestureDetector(
+      onTap: () {
+        switch (gameState.interactionState) {
+          case ISchoosingAttackTarget():
+            return;
+          case ISattachingDon():
+            return;
+          case IScountering():
+            if (gameState.combatState == CombatState.countering &&
+                (gameState.currentPlayer != cardOwner)) {
+              gameCubit.combatController.counter(
+                card,
+                cardOwner,
+              );
+            }
+            return;
+          case ISnone():
+            if (gameState.currentPlayer != cardOwner) {
+              return;
+            }
+
+            context.read<CardOptionsController>().selectCard(
+              card,
+              CardLocation.handArea,
+            );
+        }
       },
-    ),
-  );
+      child: MouseRegion(
+        onEnter: (_) =>
+            context.read<CardHighlightController>().highlightCard(card),
+        onExit: (_) => context.read<CardHighlightController>().clearHighlight(),
+        child: switch (card) {
+          CharacterCard() => CharacterCardView(
+            card: card as CharacterCard,
+            location: CardLocation.handArea,
+          ),
+          _ => const SizedBox.shrink(),
+        },
+      ),
+    );
+  }
 }
