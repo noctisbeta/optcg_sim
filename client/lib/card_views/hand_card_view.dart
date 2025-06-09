@@ -28,6 +28,8 @@ class HandCardView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch (gameState.interactionState) {
+          case ISconfirming():
+            return;
           case ISchoosingAttackTarget():
             return;
           case ISattachingDon():

@@ -10,7 +10,7 @@ import 'package:client/game_state/player.dart';
 import 'package:flutter/material.dart' show immutable;
 
 @immutable
-final class OP10_112 extends CharacterCard with EffectOnPlay {
+final class OP10_112 extends CharacterCard with OptionalEffectOnPlay {
   const OP10_112({
     required super.id,
     required super.isActive,
@@ -64,11 +64,16 @@ final class OP10_112 extends CharacterCard with EffectOnPlay {
   );
 
   @override
-  void onPlay(
-    GameState state,
-    void Function(GameState state) emit,
-    Player owner,
-  ) {
+  void onPlay({
+    required GameState state,
+    required void Function(GameState state) emit,
+    required Player owner,
+    required bool shouldActivate,
+  }) {
+    if (!shouldActivate) {
+      return;
+    }
+
     if (owner == state.me) {
       final DeckCard? trashedLife = state.opponent.lifeCards.firstOrNull;
       final List<DeckCard> newLifeCards = state.opponent.lifeCards

@@ -30,6 +30,8 @@ class CharacterAreaCardView extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         switch (gameState.interactionState) {
+          case ISconfirming():
+            return;
           case ISchoosingAttackTarget():
             if (gameState.currentPlayer == cardOwner) {
               return;

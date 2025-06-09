@@ -26,6 +26,8 @@ class DonCardView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch (gameState.interactionState) {
+          case ISconfirming():
+            return;
           case ISchoosingAttackTarget():
             return;
           case ISattachingDon():
@@ -53,7 +55,7 @@ class DonCardView extends StatelessWidget {
           border: Border.all(
             color: Colors.black54,
           ),
-          color: Colors.yellow,
+          color: Colors.grey,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),

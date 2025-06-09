@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client/game_logic/combat_controller.dart';
 import 'package:client/game_logic/don_attach_controller.dart';
 import 'package:client/game_logic/don_phase_controller.dart';
@@ -5,6 +7,7 @@ import 'package:client/game_logic/draw_phase_controller.dart';
 import 'package:client/game_logic/refresh_phase_controller.dart';
 import 'package:client/game_state/cards/game_card.dart';
 import 'package:client/game_state/game_state.dart';
+import 'package:client/game_state/interaction_state.dart';
 import 'package:client/game_state/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,6 +46,8 @@ final class SingleplayerGameController extends Cubit<GameState> {
   late final DrawPhaseController _drawPhaseController;
   late final DonPhaseController _donPhaseController;
   late final DonAttachController donAttachController;
+
+  Completer<bool>? _confirmCompleter;
 
   @override
   void emit(GameState state) {
@@ -104,7 +109,7 @@ final class SingleplayerGameController extends Cubit<GameState> {
     emit(state.copyWith(me: newMe, opponent: newOpponent));
   }
 
-  void playCard(DeckCard card) {
+  Future<void> playCard(DeckCard card) async {
     if (state.currentPlayer.donCards
             .where((donCard) => donCard.isActive)
             .length <
@@ -143,8 +148,52 @@ final class SingleplayerGameController extends Cubit<GameState> {
       emit(state.copyWith(opponent: newPlayer));
     }
 
-    if (card is EffectOnPlay) {
-      card.onPlay(state, emit, state.currentPlayer);
+    switch (card) {
+      case EffectOnPlay():
+        card.onPlay(state: state, emit: emit, owner: newPlayer);
+      case OptionalEffectOnPlay():
+        emit(
+          state.copyWith(
+            interactionState: ISconfirming(
+              interactingPlayer: state.currentPlayer,
+            ),
+          ),
+        );
+
+        _confirmCompleter = Completer<bool>();
+
+        if (_confirmCompleter == null) {
+          return;
+        }
+
+        final bool? decision = await _confirmCompleter?.future;
+
+        emit(
+          state.copyWith(
+            interactionState: const ISnone(),
+          ),
+        );
+
+        card.onPlay(
+          state: state,
+          emit: emit,
+          owner: newPlayer,
+          shouldActivate: decision ?? false,
+        );
+    }
+  }
+
+  void confirmAction() {
+    if (_confirmCompleter != null) {
+      _confirmCompleter!.complete(true);
+      _confirmCompleter = null;
+    }
+  }
+
+  void cancelAction() {
+    if (_confirmCompleter != null) {
+      _confirmCompleter!.complete(false);
+      _confirmCompleter = null;
     }
   }
 

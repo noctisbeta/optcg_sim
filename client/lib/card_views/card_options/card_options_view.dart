@@ -36,6 +36,31 @@ class CardOptionsView extends StatelessWidget {
                 ISattachingDon() => const Text(
                   'Attaching DON',
                 ),
+
+                ISconfirming() => Column(
+                  children: [
+                    const Text(
+                      'Confirming action',
+                    ),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<SingleplayerGameController>()
+                            .confirmAction();
+                      },
+                      child: const Text('Confirm'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<SingleplayerGameController>()
+                            .cancelAction();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
               },
 
               if (gameState.isAttachingDon &&
@@ -96,12 +121,12 @@ class CardOptionsView extends StatelessWidget {
               ],
               if (state.cardLocation == CardLocation.handArea)
                 ElevatedButton(
-                  onPressed: () {
-                    context.read<SingleplayerGameController>().playCard(
+                  onPressed: () async {
+                    context.read<CardOptionsController>().clearSelection();
+
+                    await context.read<SingleplayerGameController>().playCard(
                       card! as DeckCard,
                     );
-
-                    context.read<CardOptionsController>().clearSelection();
                   },
                   child: const Text('Deploy'),
                 ),

@@ -39,3 +39,12 @@ final class ISattachingDon extends InteractionState {
 
   final Player interactingPlayer;
 }
+
+@immutable
+final class ISconfirming extends InteractionState {
+  const ISconfirming({
+    required this.interactingPlayer,
+  });
+
+  final Player interactingPlayer;
+}
